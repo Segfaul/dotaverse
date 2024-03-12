@@ -1,9 +1,14 @@
+from typing import TYPE_CHECKING
 from sqlalchemy import String, ForeignKey, DateTime, func
 from sqlalchemy.orm import DeclarativeBase as Base, Mapped, relationship, mapped_column
 
-from .base import Base
-from .team import Team
-from .mixin import CRUDMixin
+from backend.api.model.base import Base
+from backend.api.model.mixin import CRUDMixin
+
+if TYPE_CHECKING:
+    from backend.api.model.team import Team
+else:
+    Team = "Team"
 
 
 class Player(Base, CRUDMixin):
@@ -31,7 +36,7 @@ class Player(Base, CRUDMixin):
     team_id: Mapped[int] = mapped_column("team_id", ForeignKey('team.id'), nullable=False)
     created_at: Mapped[DateTime] = mapped_column(
         "created_at", DateTime("Europe/Moscow"), 
-        server_default=func.now
+        default=func.now
     )
 
     team: Mapped[Team] = relationship('Team', back_populates='players')

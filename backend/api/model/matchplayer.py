@@ -1,12 +1,18 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import DeclarativeBase as Base, Mapped, relationship, mapped_column
 
-from .base import Base
-from .mixin import CRUDMixin
-from .player import Player
-from .hero import Hero
-from .playerherochance import PlayerHeroChance
-from .match import Match
+from backend.api.model.base import Base
+from backend.api.model.mixin import CRUDMixin
+from backend.api.model.player import Player
+from backend.api.model.hero import Hero
+from backend.api.model.playerherochance import PlayerHeroChance
+
+if TYPE_CHECKING:
+    from backend.api.model.match import Match
+else:
+    Match = "Match"
 
 
 class MatchPlayer(Base, CRUDMixin):

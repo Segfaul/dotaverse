@@ -1,8 +1,8 @@
 from sqlalchemy import String, Integer, DateTime, func
 from sqlalchemy.orm import DeclarativeBase as Base, Mapped, mapped_column
 
-from .base import Base
-from .mixin import CRUDMixin
+from backend.api.model.base import Base
+from backend.api.model.mixin import CRUDMixin
 
 
 class Request(Base, CRUDMixin):
@@ -27,5 +27,5 @@ class Request(Base, CRUDMixin):
     status: Mapped[int] = mapped_column("status", Integer, default=200, nullable=False)
     created_at: Mapped[DateTime] = mapped_column(
         "created_at", DateTime("Europe/Moscow"), 
-        server_default=func.now
+        default=func.now
     )

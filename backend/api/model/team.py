@@ -1,12 +1,16 @@
-from typing import AsyncIterator
+from typing import TYPE_CHECKING, AsyncIterator
 
 from sqlalchemy import String, DateTime, func, select
 from sqlalchemy.orm import DeclarativeBase as Base, Mapped, relationship, mapped_column, selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .base import Base
-from .mixin import CRUDMixin
-from .player import Player
+from backend.api.model.base import Base
+from backend.api.model.mixin import CRUDMixin
+
+if TYPE_CHECKING:
+    from backend.api.model.player import Player 
+else: 
+    Player = "Player"
 
 
 class Team(Base, CRUDMixin):
@@ -31,7 +35,7 @@ class Team(Base, CRUDMixin):
     dotabuff_link: Mapped[str] = mapped_column("dotabuff_link", String(length=128), nullable=False)
     modified_at: Mapped[DateTime] = mapped_column(
         "modified_at", DateTime("Europe/Moscow"), nullable=False, 
-        server_default=func.now, onupdate=func.now
+        default=func.now, onupdate=func.now
     )
 
     players: Mapped[list[Player]] = relationship('Player', back_populates='team')

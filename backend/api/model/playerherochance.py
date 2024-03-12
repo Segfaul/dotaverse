@@ -1,10 +1,10 @@
 from sqlalchemy import Float, DateTime, ForeignKey, func
 from sqlalchemy.orm import DeclarativeBase as Base, Mapped, relationship, mapped_column
 
-from .base import Base
-from .mixin import CRUDMixin
-from .player import Player
-from .hero import Hero
+from backend.api.model.base import Base
+from backend.api.model.mixin import CRUDMixin
+from backend.api.model.player import Player
+from backend.api.model.hero import Hero
 
 
 class PlayerHeroChance(Base, CRUDMixin):
@@ -34,7 +34,7 @@ class PlayerHeroChance(Base, CRUDMixin):
     )
     modified_at: Mapped[DateTime] = mapped_column(
         "modified_at", DateTime("Europe/Moscow"), nullable=False, 
-        server_default=func.now, onupdate=func.now
+        default=func.now, onupdate=func.now
     )
 
     player: Mapped[Player] = relationship('Player', back_populates='player_hero_chances')

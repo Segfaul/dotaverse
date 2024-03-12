@@ -1,10 +1,16 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Float, DateTime, func, select
 from sqlalchemy.orm import DeclarativeBase as Base, Mapped, mapped_column, relationship, selectinload
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from .base import Base
-from .mixin import CRUDMixin
-from .matchplayer import MatchPlayer
+from backend.api.model.base import Base
+from backend.api.model.mixin import CRUDMixin
+
+if TYPE_CHECKING:
+    from backend.api.model.matchplayer import MatchPlayer
+else:
+    MatchPlayer = "MatchPlayer"
 
 class Match(Base, CRUDMixin):
     '''
@@ -27,7 +33,7 @@ class Match(Base, CRUDMixin):
     )
     created_at: Mapped[DateTime] = mapped_column(
         "created_at", DateTime("Europe/Moscow"), 
-        server_default=func.now
+        default=func.now
     )
 
     match_players: Mapped[list[MatchPlayer]] = relationship('MatchPlayer', back_populates='match')

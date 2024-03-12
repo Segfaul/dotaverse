@@ -34,4 +34,4 @@ async def get_session() -> AsyncIterator[async_sessionmaker]:
         logger.exception(e)
 
 
-AsyncSession = Annotated[async_sessionmaker, Depends(get_session)]
+# AsyncSession = Annotated[async_sessionmaker, Depends(get_session)]

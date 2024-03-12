@@ -9,14 +9,14 @@ load_dotenv('./.env')
 
 LOG_LEVEL = env('LOG_LEVEL').upper()
 
-logger = logging.getLogger("Taipex")
+logger = logging.getLogger("Dotaverse")
 
 logger.setLevel(
     level=LOG_LEVEL \
     if LOG_LEVEL in ['DEBUG', 'ERROR', 'INFO', 'WARNING'] \
     else 'INFO'
 )
-file_handler = logging.FileHandler('Taipex.log')
+file_handler = logging.FileHandler('Dotaverse.log')
 file_handler.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s %(levelname)s: %(message)s', datefmt='%d/%m/%Y %H:%M:%S')
 file_handler.setFormatter(formatter)

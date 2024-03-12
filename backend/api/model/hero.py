@@ -1,8 +1,8 @@
 from sqlalchemy import String
 from sqlalchemy.orm import DeclarativeBase as Base, Mapped, mapped_column
 
-from .base import Base
-from .mixin import CRUDMixin
+from backend.api.model.base import Base
+from backend.api.model.mixin import CRUDMixin
 
 
 class Hero(Base, CRUDMixin):
