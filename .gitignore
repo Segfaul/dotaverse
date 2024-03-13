@@ -5,6 +5,7 @@ __pycache__/
 *$py.class
 
 # Debug & Logger
+*.db
 *.log
 *.sqlite3
 *.sqlite3-journal
@@ -21,6 +22,7 @@ venv.bak/
 
 # dependencies
 node_modules/
+versions/
 package-lock.json
 .pnp/
 .pnp.js

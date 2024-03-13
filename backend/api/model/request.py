@@ -27,5 +27,5 @@ class Request(Base, CRUDMixin):
     status: Mapped[int] = mapped_column("status", Integer, default=200, nullable=False)
     created_at: Mapped[DateTime] = mapped_column(
         "created_at", DateTime("Europe/Moscow"), 
-        default=func.now
+        default=func.now()
     )

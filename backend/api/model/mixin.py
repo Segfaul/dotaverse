@@ -43,16 +43,16 @@ class CRUDMixin:
     async def create(cls, session: AsyncSession, **kwargs):
         item = cls(**kwargs)
         session.add(item)
-        await session.flush()
+        await session.commit()
         new_item = await cls.read_by_id(session, item.id)
         return new_item if new_item else RuntimeError()
 
     async def update(self, session: AsyncSession, **kwargs) -> None:
         for key, value in kwargs.items():
             setattr(self, key, value)
-        await session.flush()
+        await session.commit()
 
     @classmethod
     async def delete(cls, session: AsyncSession, item) -> None:
         await session.delete(item)
-        await session.flush()
+        await session.commit()

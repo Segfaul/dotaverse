@@ -35,7 +35,7 @@ class Team(Base, CRUDMixin):
     dotabuff_link: Mapped[str] = mapped_column("dotabuff_link", String(length=128), nullable=False)
     modified_at: Mapped[DateTime] = mapped_column(
         "modified_at", DateTime("Europe/Moscow"), nullable=False, 
-        default=func.now, onupdate=func.now
+        default=func.now(), onupdate=func.now()
     )
 
     players: Mapped[list[Player]] = relationship('Player', back_populates='team')

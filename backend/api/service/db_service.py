@@ -1,12 +1,8 @@
 import os
-from typing import Annotated, AsyncIterator
+from typing import AsyncIterator
 
-from fastapi import Depends
-from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 from dotenv import load_dotenv
-
-from backend.config import log, logger
 
 env = os.environ.get
 load_dotenv('./.env')
@@ -23,15 +19,10 @@ async_engine = create_async_engine(
 AsyncSessionFactory = async_sessionmaker(
     bind=async_engine,
     autoflush=False,
+    expire_on_commit=False,
     future=True,
 )
 
-@log(logger)
 async def get_session() -> AsyncIterator[async_sessionmaker]:
-    try:
-        yield AsyncSessionFactory
-    except SQLAlchemyError as e:
-        logger.exception(e)
-
-
-# AsyncSession = Annotated[async_sessionmaker, Depends(get_session)]
+    async with AsyncSessionFactory() as session:
+        yield session

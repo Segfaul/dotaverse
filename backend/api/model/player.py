@@ -7,8 +7,12 @@ from backend.api.model.mixin import CRUDMixin
 
 if TYPE_CHECKING:
     from backend.api.model.team import Team
+    from backend.api.model.matchplayer import MatchPlayer
+    from backend.api.model.playerherochance import PlayerHeroChance
 else:
     Team = "Team"
+    MatchPlayer = "MatchPlayer"
+    PlayerHeroChance = "PlayerHeroChance"
 
 
 class Player(Base, CRUDMixin):
@@ -36,7 +40,9 @@ class Player(Base, CRUDMixin):
     team_id: Mapped[int] = mapped_column("team_id", ForeignKey('team.id'), nullable=False)
     created_at: Mapped[DateTime] = mapped_column(
         "created_at", DateTime("Europe/Moscow"), 
-        default=func.now
+        default=func.now()
     )
 
     team: Mapped[Team] = relationship('Team', back_populates='players')
+    match_players: Mapped[MatchPlayer] = relationship('MatchPlayer', back_populates='player')
+    player_hero_chances: Mapped[PlayerHeroChance] = relationship('PlayerHeroChance', back_populates='player')

@@ -6,5 +6,7 @@ from .player import Player
 from .playerherochance import PlayerHeroChance
 from .request import Request
 from .team import Team
-from .schema import PlayerSchema, TeamSchema, RequestSchema, \
-    HeroSchema, MatchPlayerSchema, MatchSchema, PlayerHeroChanceSchema
+from .schema import PlayerSchema, PlayerResponse, TeamSchema, TeamResponse, \
+    RequestSchema, RequestResponse, HeroSchema, HeroResponse, \
+    MatchPlayerSchema, MatchPlayerResponse, MatchSchema, MatchResponse, \
+    PlayerHeroChanceSchema, PlayerHeroChanceResponse

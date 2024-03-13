@@ -44,7 +44,7 @@ class MatchPlayer(Base, CRUDMixin):
 
     player: Mapped[Player] = relationship('Player', back_populates='match_players')
     hero: Mapped[Hero] = relationship('Hero', back_populates='match_players')
-    chance: Mapped[PlayerHeroChance] = relationship(
+    player_hero_chance: Mapped[PlayerHeroChance] = relationship(
         'PlayerHeroChance', back_populates="match_players"
     )
     match: Mapped[Match] = relationship('Match', back_populates='match_players')

@@ -1,10 +1,19 @@
+from typing import TYPE_CHECKING
+
 from sqlalchemy import Float, DateTime, ForeignKey, func
 from sqlalchemy.orm import DeclarativeBase as Base, Mapped, relationship, mapped_column
 
 from backend.api.model.base import Base
 from backend.api.model.mixin import CRUDMixin
-from backend.api.model.player import Player
-from backend.api.model.hero import Hero
+
+if TYPE_CHECKING:
+    from backend.api.model.matchplayer import MatchPlayer
+    from backend.api.model.player import Player
+    from backend.api.model.hero import Hero
+else:
+    MatchPlayer = "MatchPlayer"
+    Player = "Player"
+    Hero = "Hero"
 
 
 class PlayerHeroChance(Base, CRUDMixin):
@@ -34,8 +43,9 @@ class PlayerHeroChance(Base, CRUDMixin):
     )
     modified_at: Mapped[DateTime] = mapped_column(
         "modified_at", DateTime("Europe/Moscow"), nullable=False, 
-        default=func.now, onupdate=func.now
+        default=func.now(), onupdate=func.now()
     )
 
     player: Mapped[Player] = relationship('Player', back_populates='player_hero_chances')
     hero: Mapped[Hero] = relationship('Hero', back_populates='player_hero_chances')
+    match_players: Mapped[MatchPlayer] = relationship('MatchPlayer', back_populates='player_hero_chance')

@@ -1,9 +1,9 @@
-import asyncio
-from logging.config import fileConfig
-
 import sys
 
 sys.path = ['', '..'] + sys.path[1:]
+
+import asyncio
+from logging.config import fileConfig
 
 from alembic import context
 
@@ -52,8 +52,8 @@ async def run_migrations_online() -> None:
     """
     connectable = async_engine
 
-    with connectable.connect() as connection:
-        await connection.run_async(do_run_migrations)
+    async with connectable.connect() as connection:
+        await connection.run_sync(do_run_migrations)
 
 
 asyncio.run(run_migrations_online())

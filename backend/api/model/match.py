@@ -33,7 +33,7 @@ class Match(Base, CRUDMixin):
     )
     created_at: Mapped[DateTime] = mapped_column(
         "created_at", DateTime("Europe/Moscow"), 
-        default=func.now
+        default=func.now()
     )
 
     match_players: Mapped[list[MatchPlayer]] = relationship('MatchPlayer', back_populates='match')
