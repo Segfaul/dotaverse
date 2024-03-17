@@ -8,7 +8,7 @@ env = os.environ.get
 load_dotenv('./.env')
 
 DEBUG = (env('DEBUG').lower()=="true")
-POSTGRE_CON = f"postgres://{env('POSTGRES_USER')}:{env('POSTGRES_PASSWORD')}" \
+POSTGRE_CON = f"postgresql+asyncpg://{env('POSTGRES_USER')}:{env('POSTGRES_PASSWORD')}" \
               f"@{env('POSTGRES_HOST')}:{env('POSTGRES_PORT')}/{env('POSTGRES_DB')}"
 
 async_engine = create_async_engine(

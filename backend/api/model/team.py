@@ -1,16 +1,17 @@
-from typing import TYPE_CHECKING, AsyncIterator
+from typing import TYPE_CHECKING, List
 
-from sqlalchemy import String, DateTime, func, select
-from sqlalchemy.orm import DeclarativeBase as Base, Mapped, relationship, mapped_column, selectinload
-from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy import String, DateTime, func
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from backend.api.model.base import Base
 from backend.api.model.mixin import CRUDMixin
 
 if TYPE_CHECKING:
-    from backend.api.model.player import Player 
-else: 
+    from backend.api.model.player import Player
+    from backend.api.model.matchteam import MatchTeam
+else:
     Player = "Player"
+    MatchTeam = "MatchTeam"
 
 
 class Team(Base, CRUDMixin):
@@ -38,22 +39,5 @@ class Team(Base, CRUDMixin):
         default=func.now(), onupdate=func.now()
     )
 
-    players: Mapped[list[Player]] = relationship('Player', back_populates='team')
-
-    @classmethod
-    async def read_all(cls, session: AsyncSession, **kwargs) -> AsyncIterator:
-        stmt = select(cls)
-        include_players = kwargs.get('include_players', None)
-        if include_players:
-            stmt = stmt.options(selectinload(cls.players))
-        stream = await session.stream_scalars(stmt.order_by(cls.id))
-        async for row in stream:
-            yield row
-        
-    @classmethod
-    async def read_by_id(cls, session: AsyncSession, item_id: int, **kwargs):
-        stmt = select(cls).where(cls.id == item_id)
-        include_players = kwargs.get('include_players', None)
-        if include_players:
-            stmt = stmt.options(selectinload(cls.players))
-        return await session.scalar(stmt.order_by(cls.id))
+    players: Mapped[List[Player]] = relationship('Player', back_populates='team')
+    match_teams: Mapped[List[MatchTeam]] = relationship('MatchTeam', back_populates='team')

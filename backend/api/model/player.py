@@ -1,16 +1,17 @@
-from typing import TYPE_CHECKING
-from sqlalchemy import String, ForeignKey, DateTime, func
-from sqlalchemy.orm import DeclarativeBase as Base, Mapped, relationship, mapped_column
+from typing import TYPE_CHECKING, List
 
+from sqlalchemy import String, ForeignKey, DateTime, func
+from sqlalchemy.orm import Mapped, relationship, mapped_column, validates
+
+from backend.api.validator import validate_link
 from backend.api.model.base import Base
 from backend.api.model.mixin import CRUDMixin
+from backend.api.model.team import Team
 
 if TYPE_CHECKING:
-    from backend.api.model.team import Team
     from backend.api.model.matchplayer import MatchPlayer
     from backend.api.model.playerherochance import PlayerHeroChance
 else:
-    Team = "Team"
     MatchPlayer = "MatchPlayer"
     PlayerHeroChance = "PlayerHeroChance"
 
@@ -44,5 +45,13 @@ class Player(Base, CRUDMixin):
     )
 
     team: Mapped[Team] = relationship('Team', back_populates='players')
-    match_players: Mapped[MatchPlayer] = relationship('MatchPlayer', back_populates='player')
-    player_hero_chances: Mapped[PlayerHeroChance] = relationship('PlayerHeroChance', back_populates='player')
+    match_players: Mapped[List[MatchPlayer]] = relationship('MatchPlayer', back_populates='player')
+    player_hero_chances: Mapped[List[PlayerHeroChance]] = relationship(
+        'PlayerHeroChance', back_populates='player'
+    )
+
+    @validates('dotabuff_link')
+    def validate_dotabuff_link(self, key, value):
+        if not validate_link(value, 'https://www.dotabuff.com/'):
+            return ValueError("Provided incorrect dotabuff_link (https://www.dotabuff.com/)")
+        return value

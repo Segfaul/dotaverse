@@ -36,7 +36,7 @@ def do_run_migrations(connection):
         compare_type=True,
         dialect_opts={"paramstyle": "named"},
         connection=connection,
-        target_metadata=target_metadata,
+        target_metadata=target_metadata
     )
 
     with context.begin_transaction():

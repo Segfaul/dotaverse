@@ -1,5 +1,5 @@
 from sqlalchemy import String, Integer, DateTime, func
-from sqlalchemy.orm import DeclarativeBase as Base, Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.api.model.base import Base
 from backend.api.model.mixin import CRUDMixin

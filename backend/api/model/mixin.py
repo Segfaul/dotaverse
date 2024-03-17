@@ -1,6 +1,7 @@
 from typing import AsyncIterator
 
 from sqlalchemy import select
+from sqlalchemy.orm import selectinload, joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -21,12 +22,22 @@ class CRUDMixin:
     delete(session: AsyncSession, item):
         deletes an object by its instance
     '''
+    @classmethod
+    def apply_includes(cls, stmt, **kwargs):
+        if kwargs:
+            for key, value in kwargs.items():
+                if key.startswith('include_'):
+                    related_attr = getattr(cls, key[8:], None)
+                    if related_attr and value:
+                        stmt = stmt.options(selectinload(related_attr))
+                else:
+                    stmt = stmt.filter(key==value)
+        return stmt
 
     @classmethod
     async def read_all(cls, session: AsyncSession, **kwargs) -> AsyncIterator:
         stmt = select(cls)
-        if kwargs:
-            stmt = stmt.filter_by(**kwargs)
+        stmt = cls.apply_includes(stmt, **kwargs)
         stream = await session.stream_scalars(stmt.order_by(cls.id))
         async for row in stream:
             yield row
@@ -35,8 +46,7 @@ class CRUDMixin:
     async def read_by_id(cls, session: AsyncSession, item_id: int, **kwargs):
         stmt = select(cls).where(cls.id == item_id)
         # Fiction added for the implementation of selectinload
-        if kwargs:
-            stmt = stmt.filter_by(**kwargs)
+        stmt = cls.apply_includes(stmt, **kwargs)
         return await session.scalar(stmt.order_by(cls.id))
 
     @classmethod
@@ -47,10 +57,14 @@ class CRUDMixin:
         new_item = await cls.read_by_id(session, item.id)
         return new_item if new_item else RuntimeError()
 
-    async def update(self, session: AsyncSession, **kwargs) -> None:
-        for key, value in kwargs.items():
-            setattr(self, key, value)
-        await session.commit()
+    @classmethod
+    async def update(cls, session: AsyncSession, item, **kwargs):
+        if item:
+            for key, value in kwargs.items():
+                if hasattr(item, key) and value:
+                    setattr(item, key, value)
+            await session.commit()
+        return item
 
     @classmethod
     async def delete(cls, session: AsyncSession, item) -> None:

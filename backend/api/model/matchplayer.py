@@ -1,18 +1,14 @@
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey
-from sqlalchemy.orm import DeclarativeBase as Base, Mapped, relationship, mapped_column
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 
 from backend.api.model.base import Base
 from backend.api.model.mixin import CRUDMixin
 from backend.api.model.player import Player
 from backend.api.model.hero import Hero
 from backend.api.model.playerherochance import PlayerHeroChance
-
-if TYPE_CHECKING:
-    from backend.api.model.match import Match
-else:
-    Match = "Match"
+from backend.api.model.matchteam import MatchTeam
 
 
 class MatchPlayer(Base, CRUDMixin):
@@ -40,11 +36,13 @@ class MatchPlayer(Base, CRUDMixin):
     chance_id: Mapped[int] = mapped_column(
         "chance_id", ForeignKey('player_hero_chance.id'), nullable=False
     )
-    match_id: Mapped[int] = mapped_column("match_id", ForeignKey('match.id'), nullable=False)
+    matchteam_id: Mapped[int] = mapped_column(
+        "matchteam_id", ForeignKey('match_team.id'), nullable=False
+    )
 
     player: Mapped[Player] = relationship('Player', back_populates='match_players')
     hero: Mapped[Hero] = relationship('Hero', back_populates='match_players')
     player_hero_chance: Mapped[PlayerHeroChance] = relationship(
         'PlayerHeroChance', back_populates="match_players"
     )
-    match: Mapped[Match] = relationship('Match', back_populates='match_players')
+    match_team: Mapped[MatchTeam] = relationship('MatchTeam', back_populates='match_players')
