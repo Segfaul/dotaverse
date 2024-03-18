@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, List
 
-from sqlalchemy import String, ForeignKey, DateTime, func
+from sqlalchemy import Boolean, String, ForeignKey, DateTime, func
 from sqlalchemy.orm import Mapped, relationship, mapped_column, validates
 
 from backend.api.validator import validate_link
@@ -38,6 +38,7 @@ class Player(Base, CRUDMixin):
     )
     name: Mapped[str] = mapped_column("name", String(length=32), nullable=False)
     dotabuff_link: Mapped[str] = mapped_column("dotabuff_link", String(length=128), nullable=False)
+    is_active: Mapped[Boolean] = mapped_column("is_active", Boolean(), nullable=False)
     team_id: Mapped[int] = mapped_column("team_id", ForeignKey('team.id'), nullable=False)
     created_at: Mapped[DateTime] = mapped_column(
         "created_at", DateTime("Europe/Moscow"), 
