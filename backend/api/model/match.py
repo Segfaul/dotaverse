@@ -8,8 +8,11 @@ from backend.api.model.mixin import CRUDMixin
 
 if TYPE_CHECKING:
     from backend.api.model.matchteam import MatchTeam
+    from backend.api.model.matchplayer import MatchPlayer
 else:
     MatchTeam = "MatchTeam"
+    MatchPlayer = "MatchPlayer"
+
 
 class Match(Base, CRUDMixin):
     '''
@@ -33,3 +36,4 @@ class Match(Base, CRUDMixin):
     )
 
     match_teams: Mapped[List[MatchTeam]] = relationship('MatchTeam', back_populates='match')
+    match_players: Mapped[List[MatchPlayer]] = relationship('MatchPlayer', back_populates='match')

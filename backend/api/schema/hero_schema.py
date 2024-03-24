@@ -13,11 +13,9 @@ class HeroSchema(BaseModel):
 
     Attributes:
     -----------
-    - dotabuff_name: name of the hero on Dotabuff.
-    - gif_link: link to the hero's animation.
+    - opendota_name: name of the hero on Dotabuff.
     """
-    dotabuff_name: str
-    gif_link: str
+    opendota_name: str
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -35,8 +33,7 @@ class IndependentHeroSchema(HeroSchema):
     Attributes:
     -----------
     - id: unique identifier of the hero.
-    - dotabuff_name: name of the hero on Dotabuff.
-    - gif_link: link to the hero's animation.
+    - opendota_name: name of the hero on Dotabuff.
     """
     id: int
 
@@ -48,8 +45,7 @@ class HeroResponse(IndependentHeroSchema):
     Attributes:
     -----------
     - id: unique identifier of the hero.
-    - dotabuff_name: name of the hero on Dotabuff.
-    - gif_link: link to the hero's animation.
+    - opendota_name: name of the hero on Dotabuff.
     - match_players: hero's match records.
     - player_hero_chances: records for the probability of a hero winning.
     """

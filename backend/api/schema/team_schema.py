@@ -14,10 +14,10 @@ class TeamSchema(BaseModel):
 
     Attributes:
     - name : name of the team.
-    - dotabuff_link : link to the team's profile on dotabuff.
+    - opendota_link : link to the team's profile on opendota.
     """
     name: str
-    dotabuff_link: str
+    opendota_link: str
 
     model_config = ConfigDict(from_attributes=True)
 
@@ -35,7 +35,7 @@ class IndependentTeamSchema(TeamSchema):
     Attributes:
     - id : unique identifier of the team.
     - name : name of the team.
-    - dotabuff_link : link to the team's profile on dotabuff.
+    - opendota_link : link to the team's profile on opendota.
     - modified_at : date the team's data was last modified.
     """
     id: int
@@ -49,7 +49,7 @@ class TeamResponse(IndependentTeamSchema):
     Attributes:
     - id : unique identifier of the team.
     - name : name of the team.
-    - dotabuff_link : link to the team's profile on dotabuff.
+    - opendota_link : link to the team's profile on opendota.
     - modified_at : date the team's data was last modified.
     - players : team roster.
     - match_teams: list of teams in the match.

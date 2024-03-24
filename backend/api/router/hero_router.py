@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, Path, status
+from fastapi import APIRouter, Depends, Path, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
@@ -18,16 +18,16 @@ router = APIRouter(
     response_model=List[HeroResponse], response_model_exclude_unset=True
 )
 async def read_all_heroes(
-    include_matchplayers: Optional[bool] = 0,
-    include_playerherochances: Optional[bool] = 0,
+    request: Request,
+    include_match_players: Optional[bool] = 0,
+    include_player_hero_chances: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
 ):
     return [
         HeroResponse(**hero.__dict__).model_dump(exclude_unset=True) \
         async for hero in Hero.read_all(
             db_session,
-            include_matchplayers=include_matchplayers,
-            include_playerherochances=include_playerherochances
+            **dict(request.query_params)
         )
     ]
 
@@ -38,14 +38,14 @@ async def read_all_heroes(
 )
 async def read_hero(
     hero_id: int = Path(...),
-    include_matchplayers: Optional[bool] = 0,
-    include_playerherochances: Optional[bool] = 0,
+    include_match_players: Optional[bool] = 0,
+    include_player_hero_chances: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
 ):
     hero = await get_object_or_raise_404(
         db_session, Hero, hero_id,
-        include_matchplayers=include_matchplayers,
-        include_playerherochances=include_playerherochances
+        include_match_players=include_match_players,
+        include_player_hero_chances=include_player_hero_chances
     )
     return HeroResponse(**hero.__dict__).model_dump(exclude_unset=True)
 

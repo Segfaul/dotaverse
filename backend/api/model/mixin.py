@@ -1,7 +1,8 @@
 from typing import AsyncIterator
 
 from sqlalchemy import select
-from sqlalchemy.orm import selectinload, joinedload
+from sqlalchemy.orm import selectinload
+from sqlalchemy.orm.strategy_options import Load
 from sqlalchemy.ext.asyncio import AsyncSession
 
 
@@ -23,30 +24,39 @@ class CRUDMixin:
         deletes an object by its instance
     '''
     @classmethod
-    def apply_includes(cls, stmt, **kwargs):
+    def apply_includes(cls, stmt, *args, **kwargs):
         if kwargs:
             for key, value in kwargs.items():
                 if key.startswith('include_'):
                     related_attr = getattr(cls, key[8:], None)
-                    if related_attr and value:
+                    if related_attr and int(value):
                         stmt = stmt.options(selectinload(related_attr))
                 else:
-                    stmt = stmt.filter(key==value)
+                    related_attr = getattr(cls, key, None)
+                    stmt = stmt.filter_by(related_attr==value)
+        if args:
+            for arg in args:
+                related_attr = getattr(cls, arg, None)
+                if isinstance(arg, Load):
+                    stmt = stmt.options(arg)
+
+                if related_attr:
+                    stmt = stmt.order_by(related_attr)
         return stmt
 
     @classmethod
-    async def read_all(cls, session: AsyncSession, **kwargs) -> AsyncIterator:
+    async def read_all(cls, session: AsyncSession, *args, **kwargs) -> AsyncIterator:
         stmt = select(cls)
-        stmt = cls.apply_includes(stmt, **kwargs)
+        stmt = cls.apply_includes(stmt, *args, **kwargs)
         stream = await session.stream_scalars(stmt.order_by(cls.id))
         async for row in stream:
             yield row
 
     @classmethod
-    async def read_by_id(cls, session: AsyncSession, item_id: int, **kwargs):
+    async def read_by_id(cls, session: AsyncSession, item_id: int, *args, **kwargs):
         stmt = select(cls).where(cls.id == item_id)
         # Fiction added for the implementation of selectinload
-        stmt = cls.apply_includes(stmt, **kwargs)
+        stmt = cls.apply_includes(stmt, *args, **kwargs)
         return await session.scalar(stmt.order_by(cls.id))
 
     @classmethod

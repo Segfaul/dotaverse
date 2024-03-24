@@ -24,6 +24,7 @@ venv.bak/
 node_modules/
 versions/
 package-lock.json
+data.json
 .pnp/
 .pnp.js
 

@@ -23,7 +23,7 @@ async def read_all_requests(
     return [
         RequestResponse(**request.__dict__).model_dump(exclude_unset=True) \
         async for request in Request.read_all(
-            db_session
+            db_session,
         )
     ]
 

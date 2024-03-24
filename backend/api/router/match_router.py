@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from fastapi import APIRouter, Depends, Path, status
+from fastapi import APIRouter, Depends, Path, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
@@ -18,14 +18,15 @@ router = APIRouter(
     response_model=List[MatchResponse], response_model_exclude_unset=True
 )
 async def read_all_matches(
-    include_matchteams: Optional[bool] = 0,
+    request: Request,
+    include_match_teams: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
 ):
     return [
         MatchResponse(**match.__dict__).model_dump(exclude_unset=True) \
         async for match in Match.read_all(
             db_session,
-            include_matchteams=include_matchteams
+            **dict(request.query_params)
         )
     ]
 
@@ -36,12 +37,12 @@ async def read_all_matches(
 )
 async def read_match(
     match_id: int = Path(...),
-    include_matchteams: Optional[bool] = 0,
+    include_match_teams: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
 ):
     match = await get_object_or_raise_404(
         db_session, Match, match_id,
-        include_matchteams=include_matchteams
+        include_match_teams=include_match_teams
     )
     return MatchResponse(**match.__dict__).model_dump(exclude_unset=True)
 

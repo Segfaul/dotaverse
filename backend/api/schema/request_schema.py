@@ -10,10 +10,10 @@ class RequestSchema(BaseModel):
     Pydantic schema for the data in the Request table.
 
     Attributes:
-    - dotabuff_link: link associated with the request.
+    - opendota_link: link associated with the request.
     - status: status of the request.
     """
-    dotabuff_link: str
+    opendota_link: str
     status: int
 
     model_config = ConfigDict(from_attributes=True)
@@ -31,7 +31,7 @@ class IndependentRequestSchema(RequestSchema):
 
     Attributes:
     - id: unique identifier of the request.
-    - dotabuff_link: link associated with the request.
+    - opendota_link: link associated with the request.
     - status: status of the request.
     - created_at: date the request was created.
     """
@@ -45,7 +45,7 @@ class RequestResponse(IndependentRequestSchema):
 
     Attributes:
     - id: unique identifier of the request.
-    - dotabuff_link: link associated with the request.
+    - opendota_link: link associated with the request.
     - status: status of the request.
     - created_at: date the request was created.
     """

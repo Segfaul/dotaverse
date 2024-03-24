@@ -14,12 +14,12 @@ class PlayerSchema(BaseModel):
 
     Attributes:
     - name: name of the player.
-    - dotabuff_link: link to the player's Dotabuff profile.
+    - opendota_link: link to the player's Dotabuff profile.
     - team_id: id of the team the player belongs to.
     """
     name: str
-    dotabuff_link: str
-    is_active: str
+    opendota_link: str
+    is_active: bool
     team_id: int
 
     model_config = ConfigDict(from_attributes=True)
@@ -38,7 +38,7 @@ class IndependentPlayerSchema(PlayerSchema):
     Attributes:
     - id: unique identifier of the player.
     - name: name of the player.
-    - dotabuff_link: link to the player's Dotabuff profile.
+    - opendota_link: link to the player's Dotabuff profile.
     - team_id: id of the team the player belongs to.
     - created_at: date the player's profile was created.
     """
@@ -53,7 +53,7 @@ class PlayerResponse(IndependentPlayerSchema):
     Attributes:
     - id: unique identifier of the player.
     - name: name of the player.
-    - dotabuff_link: link to the player's Dotabuff profile.
+    - opendota_link: link to the player's Dotabuff profile.
     - team_id: id of the team the player belongs to.
     - created_at: date the player's profile was created.
     - match_players: player's match records.

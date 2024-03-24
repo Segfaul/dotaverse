@@ -46,10 +46,10 @@ class MatchTeamResponse(IndependentMatchTeamSchema):
     Pydantic schema for MatchTeam table data.
 
     Attributes:
-    - id : unique identifier of the team.
-    - name : name of the team.
-    - dotabuff_link : link to the team's profile on dotabuff.
-    - modified_at : date the team's data was last modified.
-    - players : team roster.
+    - id : unique identifier of the matchteam.
+    - match_id: identifier of the match associated with the entry.
+    - team_id: id of the team the matchteam belongs to.
+    - is_winner : boolean value whether the team is the winner.
+    - match_players : matchteam roster.
     """
     match_players: Optional[List[IndependentMatchPlayerSchema]] = None

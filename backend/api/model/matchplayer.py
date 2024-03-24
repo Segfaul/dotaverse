@@ -9,6 +9,7 @@ from backend.api.model.player import Player
 from backend.api.model.hero import Hero
 from backend.api.model.playerherochance import PlayerHeroChance
 from backend.api.model.matchteam import MatchTeam
+from backend.api.model.match import Match
 
 
 class MatchPlayer(Base, CRUDMixin):
@@ -33,12 +34,13 @@ class MatchPlayer(Base, CRUDMixin):
     )
     player_id: Mapped[int] = mapped_column("player_id", ForeignKey('player.id'), nullable=False)
     hero_id: Mapped[int] = mapped_column("hero_id", ForeignKey('hero.id'), nullable=False)
-    chance_id: Mapped[int] = mapped_column(
-        "chance_id", ForeignKey('player_hero_chance.id'), nullable=False
+    playerherochance_id: Mapped[int] = mapped_column(
+        "playerherochance_id", ForeignKey('player_hero_chance.id'), nullable=False
     )
     matchteam_id: Mapped[int] = mapped_column(
         "matchteam_id", ForeignKey('match_team.id'), nullable=False
     )
+    match_id: Mapped[int] = mapped_column("match_id", ForeignKey('match.id'), nullable=False)
 
     player: Mapped[Player] = relationship('Player', back_populates='match_players')
     hero: Mapped[Hero] = relationship('Hero', back_populates='match_players')
@@ -46,3 +48,4 @@ class MatchPlayer(Base, CRUDMixin):
         'PlayerHeroChance', back_populates="match_players"
     )
     match_team: Mapped[MatchTeam] = relationship('MatchTeam', back_populates='match_players')
+    match: Mapped[Match] = relationship('Match', back_populates='match_players')

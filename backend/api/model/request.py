@@ -11,7 +11,7 @@ class Request(Base, CRUDMixin):
 
     Attributes
     ----------
-    dotabuff_link : str
+    opendota_link : str
         link associated with the request
     status : int
         status of the request
@@ -23,7 +23,7 @@ class Request(Base, CRUDMixin):
     id: Mapped[int] = mapped_column(
         "id", autoincrement=True, nullable=False, unique=True, primary_key=True
     )
-    dotabuff_link: Mapped[str] = mapped_column("dotabuff_link", String(length=128), nullable=False)
+    opendota_link: Mapped[str] = mapped_column("opendota_link", String(length=128), nullable=False)
     status: Mapped[int] = mapped_column("status", Integer, default=200, nullable=False)
     created_at: Mapped[DateTime] = mapped_column(
         "created_at", DateTime("Europe/Moscow"), 

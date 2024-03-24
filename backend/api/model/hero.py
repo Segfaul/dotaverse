@@ -21,26 +21,17 @@ class Hero(Base, CRUDMixin):
 
     Attributes
     ----------
-    dotabuff_name : str
-        name of the hero on Dotabuff
-    gif_link : str
-        link to the hero's animation
+    opendota_name : str
+        name of the hero on OpenDota
     '''
     __tablename__ = "hero"
 
     id: Mapped[int] = mapped_column(
         "id", autoincrement=True, nullable=False, unique=True, primary_key=True
     )
-    dotabuff_name: Mapped[str] = mapped_column("dotabuff_name", String(length=64), nullable=False)
-    gif_link: Mapped[str] = mapped_column("gif_link", String(length=128), nullable=False)
+    opendota_name: Mapped[str] = mapped_column("opendota_name", String(length=64), nullable=False)
 
     match_players: Mapped[List[MatchPlayer]] = relationship('MatchPlayer', back_populates='hero')
     player_hero_chances: Mapped[List[PlayerHeroChance]] = relationship(
         'PlayerHeroChance', back_populates='hero'
     )
-
-    @validates('gif_link')
-    def validate_dotabuff_link(self, key, value):
-        if not validate_link(value):
-            return ValueError("Provided incorrect gif_link (https://)")
-        return value

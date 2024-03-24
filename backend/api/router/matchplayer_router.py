@@ -1,6 +1,6 @@
 from typing import List
 
-from fastapi import APIRouter, Depends, Path, status
+from fastapi import APIRouter, Depends, Path, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
@@ -18,12 +18,14 @@ router = APIRouter(
     response_model=List[MatchPlayerResponse], response_model_exclude_unset=True
 )
 async def read_all_matchplayers(
+    request: Request,
     db_session: AsyncSession = Depends(get_session)
 ):
     return [
         MatchPlayerResponse(**matchplayer.__dict__).model_dump(exclude_unset=True) \
         async for matchplayer in MatchPlayer.read_all(
-            db_session
+            db_session,
+            **dict(request.query_params)
         )
     ]
 

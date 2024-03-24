@@ -12,5 +12,6 @@ from .playerherochance_schema import PlayerHeroChanceSchema, PartialPlayerHeroCh
     IndependentPlayerHeroChanceSchema, PlayerHeroChanceResponse
 from .request_schema import RequestSchema, PartialRequestSchema, \
     IndependentRequestSchema, RequestResponse
+from .stats_schema import TeamStatsSchema, PlayerStatsSchema
 from .team_schema import TeamSchema, PartialTeamSchema, \
     IndependentTeamSchema, TeamResponse

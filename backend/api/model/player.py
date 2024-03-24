@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, List
 
-from sqlalchemy import Boolean, String, ForeignKey, DateTime, func
+from sqlalchemy import Boolean, Integer, String, ForeignKey, DateTime, func
 from sqlalchemy.orm import Mapped, relationship, mapped_column, validates
 
 from backend.api.validator import validate_link
@@ -24,8 +24,8 @@ class Player(Base, CRUDMixin):
     ----------
     name : str
         name of the player
-    dotabuff_link : str
-        link to the player's Dotabuff profile
+    opendota_link : str
+        link to the player's OpenDota profile
     team_id : int
         id of the team the player belongs to
     created_at : datetime
@@ -37,7 +37,7 @@ class Player(Base, CRUDMixin):
         "id", autoincrement=True, nullable=False, unique=True, primary_key=True
     )
     name: Mapped[str] = mapped_column("name", String(length=32), nullable=False)
-    dotabuff_link: Mapped[str] = mapped_column("dotabuff_link", String(length=128), nullable=False)
+    opendota_link: Mapped[str] = mapped_column("opendota_link", String(length=128), nullable=False)
     is_active: Mapped[Boolean] = mapped_column("is_active", Boolean(), nullable=False)
     team_id: Mapped[int] = mapped_column("team_id", ForeignKey('team.id'), nullable=False)
     created_at: Mapped[DateTime] = mapped_column(
@@ -51,8 +51,9 @@ class Player(Base, CRUDMixin):
         'PlayerHeroChance', back_populates='player'
     )
 
-    @validates('dotabuff_link')
-    def validate_dotabuff_link(self, key, value):
-        if not validate_link(value, 'https://www.dotabuff.com/'):
-            return ValueError("Provided incorrect dotabuff_link (https://www.dotabuff.com/)")
+    @validates('opendota_link')
+    def validate_opendota_link(self, key, value):
+        '''Validate link to https://www.opendota.com/ format'''
+        if not validate_link(value, 'https://www.opendota.com/'):
+            return ValueError("Provided incorrect opendota_link (https://www.opendota.com/)")
         return value
