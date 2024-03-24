@@ -8,10 +8,10 @@ from backend.api.model.base import Base
 from backend.api.model.mixin import CRUDMixin
 
 if TYPE_CHECKING:
-    from backend.api.model.player import Player
+    from backend.api.model.teamplayer import TeamPlayer
     from backend.api.model.matchteam import MatchTeam
 else:
-    Player = "Player"
+    TeamPlayer = "TeamPlayer"
     MatchTeam = "MatchTeam"
 
 
@@ -34,13 +34,15 @@ class Team(Base, CRUDMixin):
         "id", autoincrement=True, nullable=False, unique=True, primary_key=True
     )
     name: Mapped[str] = mapped_column("name", String(length=32), nullable=False, unique=True)
-    opendota_link: Mapped[str] = mapped_column("opendota_link", String(length=128), nullable=False)
+    opendota_link: Mapped[str] = mapped_column(
+        "opendota_link", String(length=128), nullable=False, unique=True
+    )
     modified_at: Mapped[DateTime] = mapped_column(
         "modified_at", DateTime("Europe/Moscow"), nullable=False, 
         default=func.now(), onupdate=func.now()
     )
 
-    players: Mapped[List[Player]] = relationship('Player', back_populates='team')
+    team_players: Mapped[List[TeamPlayer]] = relationship('TeamPlayer', back_populates='team')
     match_teams: Mapped[List[MatchTeam]] = relationship('MatchTeam', back_populates='team')
 
     @validates('opendota_link')

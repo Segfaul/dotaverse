@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400
-from backend.api.model import Player, Match, MatchPlayer
+from backend.api.model import Player, Match, MatchPlayer, TeamPlayer, MatchTeam
 from backend.api.schema import PlayerSchema, PartialPlayerSchema, PlayerResponse, PlayerStatsSchema
 
 router = APIRouter(
@@ -21,6 +21,7 @@ router = APIRouter(
 )
 async def read_all_players(
     request: Request,
+    include_team_players: Optional[bool] = 0,
     include_match_players: Optional[bool] = 0,
     include_player_hero_chances: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
@@ -40,12 +41,14 @@ async def read_all_players(
 )
 async def read_player(
     player_id: int = Path(...),
+    include_team_players: Optional[bool] = 0,
     include_match_players: Optional[bool] = 0,
     include_player_hero_chances: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
 ):
     player = await get_object_or_raise_404(
         db_session, Player, player_id,
+        include_team_players=include_team_players,
         include_match_players=include_match_players,
         include_player_hero_chances=include_player_hero_chances
     )
@@ -62,10 +65,12 @@ async def read_player_stats(
 ):
     player = await get_object_or_raise_404(
         db_session, Player, player_id,
-        joinedload(Player.team),
+        joinedload(Player.team_players)
+            .subqueryload(TeamPlayer.team),
         joinedload(Player.match_players)
             .subqueryload(MatchPlayer.match)
-                .subqueryload(Match.match_teams),
+                .subqueryload(Match.match_teams)
+                    .subqueryload(MatchTeam.team),
         joinedload(Player.match_players).subqueryload(MatchPlayer.player),
         joinedload(Player.match_players).subqueryload(MatchPlayer.hero),
         joinedload(Player.player_hero_chances)

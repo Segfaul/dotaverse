@@ -4,7 +4,7 @@ from typing import Optional, List
 from pydantic import BaseModel, ConfigDict
 
 from backend.api.util import _AllOptionalMeta
-from backend.api.schema.player_schema import IndependentPlayerSchema
+from backend.api.schema.teamplayer_schema import IndependentTeamPlayerSchema
 from backend.api.schema.matchteam_schema import IndependentMatchTeamSchema
 
 
@@ -51,8 +51,8 @@ class TeamResponse(IndependentTeamSchema):
     - name : name of the team.
     - opendota_link : link to the team's profile on opendota.
     - modified_at : date the team's data was last modified.
-    - players : team roster.
+    - team_players : team roster.
     - match_teams: list of teams in the match.
     """
-    players: Optional[List[IndependentPlayerSchema]] = None
+    team_players: Optional[List[IndependentTeamPlayerSchema]] = None
     match_teams: Optional[List[IndependentMatchTeamSchema]] = None

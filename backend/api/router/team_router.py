@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400
-from backend.api.model import Team, Player, PlayerHeroChance, MatchTeam
+from backend.api.model import Team, Player, TeamPlayer, PlayerHeroChance, MatchPlayer, Match
 from backend.api.schema import TeamSchema, PartialTeamSchema, TeamResponse, TeamStatsSchema
 
 router = APIRouter(
@@ -20,7 +20,7 @@ router = APIRouter(
 )
 async def read_all_teams(
     request: Request,
-    include_players: Optional[bool] = 0,
+    include_team_players: Optional[bool] = 0,
     include_match_teams: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
 ):
@@ -39,13 +39,13 @@ async def read_all_teams(
 )
 async def read_team(
     team_id: int = Path(...),
-    include_players: Optional[bool] = 0,
+    include_team_players: Optional[bool] = 0,
     include_match_teams: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
 ):
     team = await get_object_or_raise_404(
         db_session, Team, team_id,
-        include_players=include_players, include_match_teams=include_match_teams
+        include_team_players=include_team_players, include_match_teams=include_match_teams
     )
     return TeamResponse(**team.__dict__).model_dump(exclude_unset=True)
 
@@ -60,11 +60,15 @@ async def read_team_stats(
 ):
     team = await get_object_or_raise_404(
         db_session, Team, team_id,
-        joinedload(Team.players)
-            .subqueryload(Player.player_hero_chances)
-                .subqueryload(PlayerHeroChance.hero),
-        joinedload(Team.players).subqueryload(Player.match_players),
-        joinedload(Team.match_teams).subqueryload(MatchTeam.match)
+        joinedload(Team.team_players)
+            .subqueryload(TeamPlayer.player)
+                .subqueryload(Player.player_hero_chances)
+                    .subqueryload(PlayerHeroChance.hero),
+        joinedload(Team.team_players)
+            .subqueryload(TeamPlayer.player)
+                .subqueryload(Player.match_players)
+                    .subqueryload(MatchPlayer.match),
+        joinedload(Team.match_teams)
     )
     return TeamStatsSchema(**team.__dict__).model_dump(exclude_unset=True)
 

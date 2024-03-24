@@ -30,7 +30,6 @@ async def create_object_or_raise_400(db_session: AsyncSession, item, **kwargs):
         ) from e
 
     except Exception as e:
-        print(e)
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"[{item.__name__}] Internal server error: " + str(e.__cause__)

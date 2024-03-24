@@ -29,7 +29,7 @@ class Hero(Base, CRUDMixin):
     id: Mapped[int] = mapped_column(
         "id", autoincrement=True, nullable=False, unique=True, primary_key=True
     )
-    opendota_name: Mapped[str] = mapped_column("opendota_name", String(length=64), nullable=False)
+    opendota_name: Mapped[str] = mapped_column("opendota_name", String(length=64), nullable=False, unique=True)
 
     match_players: Mapped[List[MatchPlayer]] = relationship('MatchPlayer', back_populates='hero')
     player_hero_chances: Mapped[List[PlayerHeroChance]] = relationship(

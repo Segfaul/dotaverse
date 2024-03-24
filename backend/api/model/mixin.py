@@ -36,10 +36,9 @@ class CRUDMixin:
                     stmt = stmt.filter_by(related_attr==value)
         if args:
             for arg in args:
-                related_attr = getattr(cls, arg, None)
                 if isinstance(arg, Load):
                     stmt = stmt.options(arg)
-
+                related_attr = getattr(cls, arg, None) if isinstance(arg, str) else None
                 if related_attr:
                     stmt = stmt.order_by(related_attr)
         return stmt

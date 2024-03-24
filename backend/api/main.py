@@ -3,7 +3,8 @@ from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 
 from backend.api.router import hero_router, \
     match_router, matchplayer_router, matchteam_router, \
-    player_router, playerherochance_router, request_router, team_router
+    player_router, playerherochance_router, \
+    request_router, team_router, teamplayer_router
 
 tags_metadata = [
     {
@@ -24,7 +25,7 @@ tags_metadata = [
     },
     {
         "name": "Player",
-        "description": "Dota 2 pro player endpoint",
+        "description": "Dota 2 player endpoint",
     },
     {
         "name": "PlayerHeroChance",
@@ -37,6 +38,10 @@ tags_metadata = [
     {
         "name": "Team",
         "description": "Dota 2 pro team endpoint",
+    },
+    {
+        "name": "TeamPlayer",
+        "description": "Dota 2 pro player endpoint",
     },
 ]
 
@@ -62,6 +67,7 @@ app.include_router(player_router, prefix="/api")
 app.include_router(playerherochance_router, prefix="/api")
 app.include_router(request_router, prefix="/api")
 app.include_router(team_router, prefix="/api")
+app.include_router(teamplayer_router, prefix="/api")
 
 
 @app.get("/api/swagger", include_in_schema=False)

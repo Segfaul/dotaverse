@@ -1,12 +1,13 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, Path, status, Request
+from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400
-from backend.api.model import Match
-from backend.api.schema import MatchSchema, PartialMatchSchema, MatchResponse
+from backend.api.model import Match, MatchTeam, MatchPlayer
+from backend.api.schema import MatchSchema, PartialMatchSchema, MatchResponse, MatchStatsSchema
 
 router = APIRouter(
     prefix="/v1/match",
@@ -45,6 +46,31 @@ async def read_match(
         include_match_teams=include_match_teams
     )
     return MatchResponse(**match.__dict__).model_dump(exclude_unset=True)
+
+
+@router.get(
+    "/{match_id}/stats", status_code=status.HTTP_200_OK,
+    response_model=MatchStatsSchema, response_model_exclude_unset=True
+)
+async def read_match_stats(
+    match_id: int = Path(...),
+    db_session: AsyncSession = Depends(get_session)
+):
+    match = await get_object_or_raise_404(
+        db_session, Match, match_id,
+        joinedload(Match.match_teams)
+            .subqueryload(MatchTeam.team),
+        joinedload(Match.match_teams)
+            .subqueryload(MatchTeam.match_players)
+                .subqueryload(MatchPlayer.hero),
+        joinedload(Match.match_teams)
+            .subqueryload(MatchTeam.match_players)
+                .subqueryload(MatchPlayer.player_hero_chance),
+        joinedload(Match.match_teams)
+            .subqueryload(MatchTeam.match_players)
+                .subqueryload(MatchPlayer.player),
+    )
+    return MatchStatsSchema(**match.__dict__).model_dump(exclude_unset=True)
 
 
 @router.post(

@@ -13,7 +13,7 @@ class HeroSchema(BaseModel):
 
     Attributes:
     -----------
-    - opendota_name: name of the hero on Dotabuff.
+    - opendota_name: name of the hero on OpenDota.
     """
     opendota_name: str
 
@@ -33,7 +33,7 @@ class IndependentHeroSchema(HeroSchema):
     Attributes:
     -----------
     - id: unique identifier of the hero.
-    - opendota_name: name of the hero on Dotabuff.
+    - opendota_name: name of the hero on OpenDota.
     """
     id: int
 
@@ -45,7 +45,7 @@ class HeroResponse(IndependentHeroSchema):
     Attributes:
     -----------
     - id: unique identifier of the hero.
-    - opendota_name: name of the hero on Dotabuff.
+    - opendota_name: name of the hero on OpenDota.
     - match_players: hero's match records.
     - player_hero_chances: records for the probability of a hero winning.
     """
