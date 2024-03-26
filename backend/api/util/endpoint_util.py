@@ -34,3 +34,22 @@ async def create_object_or_raise_400(db_session: AsyncSession, item, **kwargs):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"[{item.__name__}] Internal server error: " + str(e.__cause__)
         ) from e
+
+
+async def update_object_or_raise_400(db_session: AsyncSession, item, item_instance, **kwargs):
+    """
+    Response pattern for api endpoint if validator throws an error
+    """
+    try:
+        await item.update(db_session, item_instance, **kwargs)
+    except IntegrityError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"[{item.__name__}] Foreign key constraint violated: " + str(e.__cause__)
+        ) from e
+
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"[{item.__name__}] Internal server error: " + str(e.__cause__)
+        ) from e

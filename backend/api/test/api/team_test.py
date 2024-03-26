@@ -12,47 +12,43 @@ pytestmark = pytest.mark.anyio
     (
         (
             {
-                "name": "Puppey",
-                "steamid": 76561198047544485,
-                "opendota_link": "https://www.opendota.com/players/87278757"
+                "name": "Team Secret",
+                "opendota_link": "https://www.opendota.com/teams/1838315"
             },
             status.HTTP_201_CREATED,
         ),
         (
             {
-                "name": "Puppey",
-                "steamid": 76561198047544485,
-                "opendota_link": "https://www.opendota.com/players/87278757"
+                "name": "Team Secret",
+                "opendota_link": "https://www.opendota.com/teams/1838315"
             },
             status.HTTP_400_BAD_REQUEST,
         ),
         (
             {
-                "name": "Puppey",
-                "steamid": 765611980475444850,
-                "opendota_link": "somefakelink.com/87278757"
+                "name": "Team Newbies",
+                "opendota_link": "somefakelink.com/1838315"
             },
             status.HTTP_400_BAD_REQUEST,
         ),
         (
             {
-                "name": "Puppey",
-                "steamid": 'dude',
-                "opendota_link": "https://www.opendota.com/players/87278757"
+                "name": "Team Secret",
+                "opendota_link": 12
             },
-            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status.HTTP_400_BAD_REQUEST,
         ),
     ),
 )
-async def test_add_player(client: AsyncClient, payload: dict, status_code: int):
-    response = await client.post("/player/", params=payload)
+async def test_add_team(client: AsyncClient, payload: dict, status_code: int):
+    response = await client.post("/team/", params=payload)
     assert response.status_code == status_code
     if status_code == status.HTTP_201_CREATED:
         assert payload["name"] == response.json()["name"]
 
 
 @pytest.mark.parametrize(
-    "player_id, stats, payload, status_code",
+    "team_id, stats, payload, status_code",
     (
         (
             None,
@@ -65,8 +61,7 @@ async def test_add_player(client: AsyncClient, payload: dict, status_code: int):
             0,
             {
                 "include_team_players": 1,
-                "include_match_players": 1,
-                "include_player_hero_chances": 1
+                "include_match_teams": 1
             },
             status.HTTP_200_OK,
         ),
@@ -99,23 +94,22 @@ async def test_add_player(client: AsyncClient, payload: dict, status_code: int):
             0,
             {
                 "include_team_players": 1,
-                "include_match_players": 1,
-                "include_player_hero_chances": 1
+                "include_match_teams": 1
             },
             status.HTTP_200_OK,
         ),
     ),
 )
-async def test_get_player(client: AsyncClient, player_id: Optional[int], stats: Optional[bool], payload: dict, status_code: int):
+async def test_get_team(client: AsyncClient, team_id: Optional[int], stats: Optional[bool], payload: dict, status_code: int):
     response = await client.get(
-        f"/player/{player_id if player_id else ''}{'/stats' if stats else ''}",
+        f"/team/{team_id if team_id else ''}{'/stats' if stats else ''}",
         params=payload
     )
     assert response.status_code == status_code
 
 
 @pytest.mark.parametrize(
-    "player_id, payload, status_code",
+    "team_id, payload, status_code",
     (
         (
             1,
@@ -125,7 +119,7 @@ async def test_get_player(client: AsyncClient, player_id: Optional[int], stats: 
         (
             1,
             {
-                "name": "Puppey"
+                "name": "Team Secret"
             },
             status.HTTP_200_OK,
         ),
@@ -137,19 +131,19 @@ async def test_get_player(client: AsyncClient, player_id: Optional[int], stats: 
         (
             1,
             {
-                "steamid": "xxxx"
+                "opendota_link": 1234
             },
-            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            status.HTTP_400_BAD_REQUEST,
         ),
     ),
 )
-async def test_upd_player(client: AsyncClient, player_id: Optional[int], payload: dict, status_code: int):
-    response = await client.patch(f"/player/{player_id}", params=payload)
+async def test_upd_team(client: AsyncClient, team_id: Optional[int], payload: dict, status_code: int):
+    response = await client.patch(f"/team/{team_id}", params=payload)
     assert response.status_code == status_code
 
 
 @pytest.mark.parametrize(
-    "player_id, status_code",
+    "team_id, status_code",
     (
         (
             1,
@@ -161,6 +155,6 @@ async def test_upd_player(client: AsyncClient, player_id: Optional[int], payload
         )
     ),
 )
-async def test_delete_player(client: AsyncClient, player_id: Optional[int], status_code: int):
-    response = await client.delete(f"/player/{player_id}")
+async def test_delete_team(client: AsyncClient, team_id: Optional[int], status_code: int):
+    response = await client.delete(f"/team/{team_id}")
     assert response.status_code == status_code

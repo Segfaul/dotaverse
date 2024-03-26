@@ -33,7 +33,7 @@ class CRUDMixin:
                         stmt = stmt.options(selectinload(related_attr))
                 else:
                     related_attr = getattr(cls, key, None)
-                    stmt = stmt.filter_by(related_attr==value)
+                    stmt = stmt.filter(related_attr==value)
         if args:
             for arg in args:
                 if isinstance(arg, Load):
@@ -48,7 +48,7 @@ class CRUDMixin:
         stmt = select(cls)
         stmt = cls.apply_includes(stmt, *args, **kwargs)
         stream = await session.stream_scalars(stmt.order_by(cls.id))
-        async for row in stream:
+        async for row in stream.unique():
             yield row
 
     @classmethod

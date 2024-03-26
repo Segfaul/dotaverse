@@ -6,6 +6,7 @@ __pycache__/
 
 # Debug & Logger
 *.db
+*.db-journal
 *.log
 *.sqlite3
 *.sqlite3-journal

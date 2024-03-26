@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, Path, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
-from backend.api.util import get_object_or_raise_404, create_object_or_raise_400
+from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
+    update_object_or_raise_400
 from backend.api.model import Request
 from backend.api.schema import RequestSchema, PartialRequestSchema, RequestResponse
 
@@ -62,7 +63,7 @@ async def update_request(
     db_session: AsyncSession = Depends(get_session)
 ):
     request = await get_object_or_raise_404(db_session, Request, request_id)
-    await Request.update(db_session, request, **payload.model_dump())
+    await update_object_or_raise_400(db_session, Request, request, **payload.model_dump())
     return RequestResponse(**request.__dict__).model_dump(exclude_unset=True)
 
 

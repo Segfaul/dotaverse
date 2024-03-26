@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, Path, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
-from backend.api.util import get_object_or_raise_404, create_object_or_raise_400
+from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
+    update_object_or_raise_400
 from backend.api.model import PlayerHeroChance
 from backend.api.schema import PlayerHeroChanceSchema, PartialPlayerHeroChanceSchema, PlayerHeroChanceResponse
 
@@ -71,7 +72,9 @@ async def update_playerherochance(
     playerherochance = await get_object_or_raise_404(
         db_session, PlayerHeroChance, playerherochance_id
     )
-    await PlayerHeroChance.update(db_session, playerherochance, **payload.model_dump())
+    await update_object_or_raise_400(
+        db_session, PlayerHeroChance, playerherochance, **payload.model_dump()
+    )
     return PlayerHeroChanceResponse(**playerherochance.__dict__).model_dump(exclude_unset=True)
 
 

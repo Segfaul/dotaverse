@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, Path, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
-from backend.api.util import get_object_or_raise_404, create_object_or_raise_400
+from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
+    update_object_or_raise_400
 from backend.api.model import MatchPlayer
 from backend.api.schema import MatchPlayerSchema, PartialMatchPlayerSchema, MatchPlayerResponse
 
@@ -64,7 +65,7 @@ async def update_matchplayer(
     db_session: AsyncSession = Depends(get_session)
 ):
     matchplayer = await get_object_or_raise_404(db_session, MatchPlayer, matchplayer_id)
-    await MatchPlayer.update(db_session, matchplayer, **payload.model_dump())
+    await update_object_or_raise_400(db_session, MatchPlayer, matchplayer, **payload.model_dump())
     return MatchPlayerResponse(**matchplayer.__dict__).model_dump(exclude_unset=True)
 
 

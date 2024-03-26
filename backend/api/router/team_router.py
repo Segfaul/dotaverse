@@ -5,7 +5,8 @@ from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
-from backend.api.util import get_object_or_raise_404, create_object_or_raise_400
+from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
+    update_object_or_raise_400
 from backend.api.model import Team, Player, TeamPlayer, PlayerHeroChance, MatchPlayer, Match
 from backend.api.schema import TeamSchema, PartialTeamSchema, TeamResponse, TeamStatsSchema
 
@@ -67,7 +68,8 @@ async def read_team_stats(
         joinedload(Team.team_players)
             .subqueryload(TeamPlayer.player)
                 .subqueryload(Player.match_players)
-                    .subqueryload(MatchPlayer.match),
+                    .subqueryload(MatchPlayer.match)
+                        .subqueryload(Match.match_teams),
         joinedload(Team.match_teams)
     )
     return TeamStatsSchema(**team.__dict__).model_dump(exclude_unset=True)
@@ -93,7 +95,7 @@ async def update_team(
     db_session: AsyncSession = Depends(get_session)
 ):
     team = await get_object_or_raise_404(db_session, Team, team_id)
-    await Team.update(db_session, team, **payload.model_dump())
+    await update_object_or_raise_400(db_session, Team, team, **payload.model_dump())
     return TeamResponse(**team.__dict__).model_dump(exclude_unset=True)
 
 

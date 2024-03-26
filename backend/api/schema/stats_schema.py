@@ -24,7 +24,6 @@ class PlayerHeroChanceStatsSchema(IndependentPlayerHeroChanceSchema):
     - player: player description associated with chance.
     """
     hero: Optional[IndependentHeroSchema] = None
-    player: Optional[IndependentPlayerSchema] = None
 
 
 class IndependentMatchTeamStatsSchema(IndependentMatchTeamSchema):
@@ -52,6 +51,19 @@ class IndependentMatchStatsSchema(IndependentMatchSchema):
     - match_teams: teams description associated with match.
     """
     match_teams: Optional[List[IndependentMatchTeamStatsSchema]] = None
+
+
+class TeamMatchTeamStatsSchema(IndependentMatchTeamSchema):
+    """
+    Pydantic schema for MatchTeam table data (subqueries).
+
+    Attributes:
+    - id : unique identifier of the matchteam.
+    - match_id: identifier of the match associated with the entry.
+    - team_id: id of the team the matchteam belongs to.
+    - is_winner : boolean value whether the team is the winner.
+    """
+    match: Optional[IndependentMatchStatsSchema] = None
 
 
 class MatchPlayerStatsSchema(IndependentMatchPlayerSchema):
@@ -167,4 +179,4 @@ class TeamStatsSchema(IndependentTeamSchema):
     - match_teams: match_team perfomances associated with the entry.
     """
     team_players: Optional[List[TeamPlayerStatsSchema]] = None
-    match_teams: Optional[List[IndependentMatchTeamStatsSchema]] = None
+    match_teams: Optional[List[TeamMatchTeamStatsSchema]] = None

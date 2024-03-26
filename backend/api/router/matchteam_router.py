@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, Path, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
-from backend.api.util import get_object_or_raise_404, create_object_or_raise_400
+from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
+    update_object_or_raise_400
 from backend.api.model import MatchTeam
 from backend.api.schema import MatchTeamSchema, PartialMatchTeamSchema, MatchTeamResponse
 
@@ -67,7 +68,7 @@ async def update_matchteam(
     db_session: AsyncSession = Depends(get_session)
 ):
     matchteam = await get_object_or_raise_404(db_session, MatchTeam, matchteam_id)
-    await MatchTeam.update(db_session, matchteam, **payload.model_dump())
+    await update_object_or_raise_400(db_session, MatchTeam, matchteam, **payload.model_dump())
     return MatchTeamResponse(**matchteam.__dict__).model_dump(exclude_unset=True)
 
 

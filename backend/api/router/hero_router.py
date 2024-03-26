@@ -4,7 +4,8 @@ from fastapi import APIRouter, Depends, Path, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
-from backend.api.util import get_object_or_raise_404, create_object_or_raise_400
+from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
+    update_object_or_raise_400
 from backend.api.model import Hero
 from backend.api.schema import HeroSchema, PartialHeroSchema, HeroResponse
 
@@ -70,7 +71,7 @@ async def update_hero(
     db_session: AsyncSession = Depends(get_session)
 ):
     hero = await get_object_or_raise_404(db_session, Hero, hero_id)
-    await Hero.update(db_session, hero, **payload.model_dump())
+    await update_object_or_raise_400(db_session, Hero, hero, **payload.model_dump())
     return HeroResponse(**hero.__dict__).model_dump(exclude_unset=True)
 
 
