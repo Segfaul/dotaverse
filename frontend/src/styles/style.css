@@ -1,0 +1,36 @@
+header {
+    height: 100%;
+    max-width: 10vw;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: #111;
+    overflow-x: hidden;
+    transition: 0.5s;
+    padding-top: 5vh;
+}
+
+header a {
+    color: #ffff;
+    
+}
+  
+h1 {
+    font-size: 3em;
+    margin: 0 0.3em;
+}
+
+main-menu{
+    display: flex;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 10px;
+}
+  
