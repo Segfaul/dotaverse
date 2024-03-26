@@ -1,92 +1,111 @@
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import client from './config/client';
 
-const Home: React.FC = () => {
-    const [teams, setTeams] = useState<any[]>([]);
-    const [selectedTeam1, setSelectedTeam1] = useState<string>('');
-    const [selectedTeam2, setSelectedTeam2] = useState<string>('');
-    const [team1Data, setTeam1Data] = useState<any>(null);
-    const [team2Data, setTeam2Data] = useState<any>(null);
+interface Player {
+  name: string;
+}
 
-    useEffect(() => {
-        const fetchTeams = async () => {
-          try {
-            const response = await client.get('/api/v1/team/');
-            setTeams(response.data);
-          } catch (error) {
-            console.error('Error fetching teams:', error);
-          }
-        };
-    
-        fetchTeams();
-      }, []);
-    const fetchTeamData = async (teamId: string, setter: React.Dispatch<React.SetStateAction<any>>) => {
-        if (teamId) {
-            try {
-            const response = await client.get(`/api/v1/team/${teamId}/stats`);
-            setter(response.data);
-            } catch (error) {
-            console.error(`Error fetching data for team ${teamId}:`, error);
-            setter(null);
-            }
-            }
-    };
-    // fetchTeamData(selectedTeam1, setTeam1Data);
-    return (
-        <main>
-            <h1>Teams</h1>
-            <div>
-                <label htmlFor="team1">Select Team 1:</label>
-                <select id="team1" value={selectedTeam1} onChange={(e) => setSelectedTeam1(e.target.value)}>
-                <option value="">Select a team</option>
-                {teams.map((team) => (
-                    <option key={team.id} value={team.name}>
-                    {team.name}
-                    </option>
-                ))}
-                </select>
-            </div>
-            <div>
-                <label htmlFor="team2">Select Team 2:</label>
-                <select id="team2" value={selectedTeam2} onChange={(e) => setSelectedTeam2(e.target.value)}>
-                <option value="">Select a team</option>
-                {teams.map((team) => (
-                    <option key={team.id} value={team.name}>
-                    {team.name}
-                    </option>
-                ))}
-                </select>
-            </div>
-            <div>
-                <p>Selected Team 1: {selectedTeam1}</p>
-                <p>Selected Team 2: {selectedTeam2}</p>
-            </div>
-            <div>
-        <h2>Team 1 Data:</h2>
-        {team1Data && (
-          <ul>
-            {Object.entries(team1Data).map(([key, value]) => (
-              <li key={key}>
-                value
-              </li>
+interface Team {
+  id: string;
+  name: string;
+}
+
+const Home: React.FC = () => {
+  const [teams, setTeams] = useState<Team[]>([]);
+  const [teamStats, setTeamStats] = useState<{ [teamId: string]: Player[] }>({});
+
+  useEffect(() => {
+    fetchTeams();
+  }, []);
+
+  const fetchTeams = async () => {
+    try {
+      const response = await client.get('/api/v1/team/');
+      setTeams(response.data);
+    } catch (error) {
+      console.error('Error fetching teams:', error);
+    }
+  };
+
+  const fetchTeamStats = async (teamId: string) => {
+    try {
+      const response = await client.get(`/api/v1/team/${teamId}/stats`);
+      console.log(response.data.team_players);
+      setTeamStats((prevStats) => ({
+        ...prevStats,
+        [teamId]: response.data.team_players.slice(0, 5),
+      }));
+    } catch (error) {
+      console.error('Error fetching team stats:', error);
+    }
+  };
+
+  return (
+    <div>
+      <TeamRepresentation
+        teams={teams}
+        fetchTeamStats={fetchTeamStats}
+        teamStats={teamStats}
+      />
+      <TeamRepresentation
+        teams={teams}
+        fetchTeamStats={fetchTeamStats}
+        teamStats={teamStats}
+      />
+    </div>
+  );
+};
+
+interface TeamRepresentationProps {
+  teams: Team[];
+  fetchTeamStats: (teamId: string) => Promise<void>;
+  teamStats: { [teamId: string]: Player[] };
+}
+
+const TeamRepresentation: React.FC<TeamRepresentationProps> = ({
+  teams,
+  fetchTeamStats,
+  teamStats,
+}) => {
+  const [selectedTeam, setSelectedTeam] = useState<string>('');
+
+  const handleTeamChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedTeamId = event.target.value;
+    setSelectedTeam(selectedTeamId);
+    if (!teamStats[selectedTeamId]) {
+      fetchTeamStats(selectedTeamId);
+    }
+  };
+
+  return (
+    <div>
+      <h1>Team Representation</h1>
+      <select value={selectedTeam} onChange={handleTeamChange}>
+        <option value="">Select a Team</option>
+        {teams.map((team) => (
+          <option key={team.id} value={team.id}>
+            {team.name}
+          </option>
+        ))}
+      </select>
+      <h2>Team Stats</h2>
+      <ul>
+      {teamStats[selectedTeam]?.map((player, index) => (
+        <li key={index}>
+          {player.player.name}
+          <select>
+            <option value="">Select a PHC</option>
+            {player.player.player_hero_chances.map((phc) => (
+              <option key={phc.id} value={phc.name}>
+                {phc.hero.opendota_name}
+              </option>
             ))}
-          </ul>
-        )}
-      </div>
-      <div>
-        <h2>Team 2 Data:</h2>
-        {team2Data && (
-          <ul>
-            {Object.entries(team2Data).map(([key, value]) => (
-              <li key={key}>
-                <h3>value</h3>
-              </li>
-            ))}
-          </ul>
-        )}
-      </div>
-        </main>
-    );
+          </select>
+        </li>
+      ))}
+      </ul>
+    </div>
+  );
 };
 
 export default Home;
