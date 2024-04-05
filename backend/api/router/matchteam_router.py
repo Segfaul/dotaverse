@@ -53,7 +53,7 @@ async def read_matchteam(
     response_model=MatchTeamResponse, response_model_exclude_unset=True
 )
 async def create_matchteam(
-    payload: MatchTeamSchema = Depends(), db_session: AsyncSession = Depends(get_session)
+    payload: MatchTeamSchema, db_session: AsyncSession = Depends(get_session)
 ):
     matchteam = await create_object_or_raise_400(db_session, MatchTeam, **payload.model_dump())
     return MatchTeamResponse(**matchteam.__dict__).model_dump(exclude_unset=True)
@@ -64,7 +64,7 @@ async def create_matchteam(
     response_model=MatchTeamResponse, response_model_exclude_unset=True
 )
 async def update_matchteam(
-    matchteam_id: int = Path(...), payload: PartialMatchTeamSchema = Depends(),
+    payload: PartialMatchTeamSchema, matchteam_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
     matchteam = await get_object_or_raise_404(db_session, MatchTeam, matchteam_id)

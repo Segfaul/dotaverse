@@ -29,14 +29,14 @@ pytestmark = pytest.mark.anyio
     ),
 )
 async def test_add_playerherochance(client: AsyncClient, payload: dict, status_code: int):
-    response = await client.post("/playerherochance/", params=payload)
+    response = await client.post("/playerherochance/", json=payload)
     assert response.status_code == status_code
     if status_code == status.HTTP_201_CREATED:
         assert payload["win_percentage"] == response.json()["win_percentage"]
 
 
 @pytest.mark.parametrize(
-    "playerherochance_id, payload, status_code",
+    "playerherochance_id, params, status_code",
     (
         (
             None,
@@ -69,10 +69,10 @@ async def test_add_playerherochance(client: AsyncClient, payload: dict, status_c
         ),
     ),
 )
-async def test_get_playeherochance(client: AsyncClient, playerherochance_id: Optional[int], payload: dict, status_code: int):
+async def test_get_playeherochance(client: AsyncClient, playerherochance_id: Optional[int], params: dict, status_code: int):
     response = await client.get(
         f"/playerherochance/{playerherochance_id if playerherochance_id else ''}",
-        params=payload
+        params=params
     )
     assert response.status_code == status_code
 
@@ -107,7 +107,7 @@ async def test_get_playeherochance(client: AsyncClient, playerherochance_id: Opt
     ),
 )
 async def test_upd_playeherochance(client: AsyncClient, playerherochance_id: Optional[int], payload: dict, status_code: int):
-    response = await client.patch(f"/playerherochance/{playerherochance_id}", params=payload)
+    response = await client.patch(f"/playerherochance/{playerherochance_id}", json=payload)
     assert response.status_code == status_code
 
 

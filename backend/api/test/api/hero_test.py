@@ -25,14 +25,14 @@ pytestmark = pytest.mark.anyio
     ),
 )
 async def test_add_hero(client: AsyncClient, payload: dict, status_code: int):
-    response = await client.post("/hero/", params=payload)
+    response = await client.post("/hero/", json=payload)
     assert response.status_code == status_code
     if status_code == status.HTTP_201_CREATED:
         assert payload["opendota_name"] == response.json()["opendota_name"]
 
 
 @pytest.mark.parametrize(
-    "hero_id, payload, status_code",
+    "hero_id, params, status_code",
     (
         (
             None,
@@ -67,8 +67,8 @@ async def test_add_hero(client: AsyncClient, payload: dict, status_code: int):
         ),
     ),
 )
-async def test_get_hero(client: AsyncClient, hero_id: Optional[int], payload: dict, status_code: int):
-    response = await client.get(f"/hero/{hero_id if hero_id else ''}", params=payload)
+async def test_get_hero(client: AsyncClient, hero_id: Optional[int], params: dict, status_code: int):
+    response = await client.get(f"/hero/{hero_id if hero_id else ''}", params=params)
     assert response.status_code == status_code
 
 
@@ -95,7 +95,7 @@ async def test_get_hero(client: AsyncClient, hero_id: Optional[int], payload: di
     ),
 )
 async def test_upd_hero(client: AsyncClient, hero_id: Optional[int], payload: dict, status_code: int):
-    response = await client.patch(f"/hero/{hero_id}", params=payload)
+    response = await client.patch(f"/hero/{hero_id}", json=payload)
     assert response.status_code == status_code
 
 

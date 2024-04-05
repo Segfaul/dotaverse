@@ -36,19 +36,19 @@ pytestmark = pytest.mark.anyio
                 "name": "Team Secret",
                 "opendota_link": 12
             },
-            status.HTTP_400_BAD_REQUEST,
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
         ),
     ),
 )
 async def test_add_team(client: AsyncClient, payload: dict, status_code: int):
-    response = await client.post("/team/", params=payload)
+    response = await client.post("/team/", json=payload)
     assert response.status_code == status_code
     if status_code == status.HTTP_201_CREATED:
         assert payload["name"] == response.json()["name"]
 
 
 @pytest.mark.parametrize(
-    "team_id, stats, payload, status_code",
+    "team_id, stats, params, status_code",
     (
         (
             None,
@@ -100,10 +100,10 @@ async def test_add_team(client: AsyncClient, payload: dict, status_code: int):
         ),
     ),
 )
-async def test_get_team(client: AsyncClient, team_id: Optional[int], stats: Optional[bool], payload: dict, status_code: int):
+async def test_get_team(client: AsyncClient, team_id: Optional[int], stats: Optional[bool], params: dict, status_code: int):
     response = await client.get(
         f"/team/{team_id if team_id else ''}{'/stats' if stats else ''}",
-        params=payload
+        params=params
     )
     assert response.status_code == status_code
 
@@ -133,12 +133,12 @@ async def test_get_team(client: AsyncClient, team_id: Optional[int], stats: Opti
             {
                 "opendota_link": 1234
             },
-            status.HTTP_400_BAD_REQUEST,
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
         ),
     ),
 )
 async def test_upd_team(client: AsyncClient, team_id: Optional[int], payload: dict, status_code: int):
-    response = await client.patch(f"/team/{team_id}", params=payload)
+    response = await client.patch(f"/team/{team_id}", json=payload)
     assert response.status_code == status_code
 
 

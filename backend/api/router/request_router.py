@@ -48,7 +48,7 @@ async def read_request(
     response_model=RequestResponse, response_model_exclude_unset=True
 )
 async def create_request(
-    payload: RequestSchema = Depends(), db_session: AsyncSession = Depends(get_session)
+    payload: RequestSchema, db_session: AsyncSession = Depends(get_session)
 ):
     request = await create_object_or_raise_400(db_session, Request, **payload.model_dump())
     return RequestResponse(**request.__dict__).model_dump(exclude_unset=True)
@@ -59,7 +59,7 @@ async def create_request(
     response_model=RequestResponse, response_model_exclude_unset=True
 )
 async def update_request(
-    request_id: int = Path(...), payload: PartialRequestSchema = Depends(),
+    payload: PartialRequestSchema, request_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
     request = await get_object_or_raise_404(db_session, Request, request_id)

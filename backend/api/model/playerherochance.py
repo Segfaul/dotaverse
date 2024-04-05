@@ -47,5 +47,5 @@ class PlayerHeroChance(Base, CRUDMixin):
     player: Mapped[Player] = relationship('Player', back_populates='player_hero_chances')
     hero: Mapped[Hero] = relationship('Hero', back_populates='player_hero_chances')
     match_players: Mapped[List[MatchPlayer]] = relationship(
-        'MatchPlayer', back_populates='player_hero_chance'
+        'MatchPlayer', cascade='all, delete-orphan', back_populates='player_hero_chance'
     )

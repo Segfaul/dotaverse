@@ -51,7 +51,7 @@ async def read_teamplayer(
     response_model=TeamPlayerResponse, response_model_exclude_unset=True
 )
 async def create_teamplayer(
-    payload: TeamPlayerSchema = Depends(), db_session: AsyncSession = Depends(get_session)
+    payload: TeamPlayerSchema, db_session: AsyncSession = Depends(get_session)
 ):
     teamplayer = await create_object_or_raise_400(db_session, TeamPlayer, **payload.model_dump())
     return TeamPlayerResponse(**teamplayer.__dict__).model_dump(exclude_unset=True)
@@ -62,7 +62,7 @@ async def create_teamplayer(
     response_model=TeamPlayerResponse, response_model_exclude_unset=True
 )
 async def update_teamplayer(
-    teamplayer_id: int = Path(...), payload: PartialTeamPlayerSchema = Depends(),
+    payload: PartialTeamPlayerSchema, teamplayer_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
     teamplayer = await get_object_or_raise_404(db_session, TeamPlayer, teamplayer_id)

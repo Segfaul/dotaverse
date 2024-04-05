@@ -47,10 +47,14 @@ class Player(Base, CRUDMixin):
         default=func.now()
     )
 
-    team_players: Mapped[List[TeamPlayer]] = relationship('TeamPlayer', back_populates='player')
-    match_players: Mapped[List[MatchPlayer]] = relationship('MatchPlayer', back_populates='player')
+    team_players: Mapped[List[TeamPlayer]] = relationship(
+        'TeamPlayer', cascade='all, delete-orphan', back_populates='player'
+    )
+    match_players: Mapped[List[MatchPlayer]] = relationship(
+        'MatchPlayer', cascade='all, delete-orphan', back_populates='player'
+    )
     player_hero_chances: Mapped[List[PlayerHeroChance]] = relationship(
-        'PlayerHeroChance', back_populates='player'
+        'PlayerHeroChance', cascade='all, delete-orphan', back_populates='player'
     )
 
     @validates('opendota_link')

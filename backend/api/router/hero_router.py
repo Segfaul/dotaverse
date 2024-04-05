@@ -56,7 +56,7 @@ async def read_hero(
     response_model=HeroResponse, response_model_exclude_unset=True
 )
 async def create_hero(
-    payload: HeroSchema = Depends(), db_session: AsyncSession = Depends(get_session)
+    payload: HeroSchema, db_session: AsyncSession = Depends(get_session)
 ):
     hero = await create_object_or_raise_400(db_session, Hero, **payload.model_dump())
     return HeroResponse(**hero.__dict__).model_dump(exclude_unset=True)
@@ -67,7 +67,7 @@ async def create_hero(
     response_model=HeroResponse, response_model_exclude_unset=True
 )
 async def update_hero(
-    hero_id: int = Path(...), payload: PartialHeroSchema = Depends(),
+    payload: PartialHeroSchema, hero_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
     hero = await get_object_or_raise_404(db_session, Hero, hero_id)

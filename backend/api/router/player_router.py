@@ -84,7 +84,7 @@ async def read_player_stats(
     response_model=PlayerResponse, response_model_exclude_unset=True
 )
 async def create_player(
-    payload: PlayerSchema = Depends(), db_session: AsyncSession = Depends(get_session)
+    payload: PlayerSchema, db_session: AsyncSession = Depends(get_session)
 ):
     player = await create_object_or_raise_400(db_session, Player, **payload.model_dump())
     return PlayerResponse(**player.__dict__).model_dump(exclude_unset=True)
@@ -95,7 +95,7 @@ async def create_player(
     response_model=PlayerResponse, response_model_exclude_unset=True
 )
 async def update_player(
-    player_id: int = Path(...), payload: PartialPlayerSchema = Depends(),
+    payload: PartialPlayerSchema, player_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
     player = await get_object_or_raise_404(db_session, Player, player_id)

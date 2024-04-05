@@ -35,5 +35,9 @@ class Match(Base, CRUDMixin):
         default=func.now()
     )
 
-    match_teams: Mapped[List[MatchTeam]] = relationship('MatchTeam', back_populates='match')
-    match_players: Mapped[List[MatchPlayer]] = relationship('MatchPlayer', back_populates='match')
+    match_teams: Mapped[List[MatchTeam]] = relationship(
+        'MatchTeam', cascade='all, delete-orphan', back_populates='match'
+    )
+    match_players: Mapped[List[MatchPlayer]] = relationship(
+        'MatchPlayer', cascade='all, delete-orphan', back_populates='match'
+    )

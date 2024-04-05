@@ -42,8 +42,12 @@ class Team(Base, CRUDMixin):
         default=func.now(), onupdate=func.now()
     )
 
-    team_players: Mapped[List[TeamPlayer]] = relationship('TeamPlayer', back_populates='team')
-    match_teams: Mapped[List[MatchTeam]] = relationship('MatchTeam', back_populates='team')
+    team_players: Mapped[List[TeamPlayer]] = relationship(
+        'TeamPlayer', cascade='all, delete-orphan', back_populates='team'
+    )
+    match_teams: Mapped[List[MatchTeam]] = relationship(
+        'MatchTeam', cascade='all, delete-orphan', back_populates='team'
+    )
 
     @validates('opendota_link')
     def validate_opendota_link(self, key, value):

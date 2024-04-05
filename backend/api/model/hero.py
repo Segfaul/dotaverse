@@ -33,7 +33,9 @@ class Hero(Base, CRUDMixin):
         "opendota_name", String(length=64), nullable=False, unique=True
     )
 
-    match_players: Mapped[List[MatchPlayer]] = relationship('MatchPlayer', back_populates='hero')
+    match_players: Mapped[List[MatchPlayer]] = relationship(
+        'MatchPlayer', cascade='all, delete-orphan', back_populates='hero'
+    )
     player_hero_chances: Mapped[List[PlayerHeroChance]] = relationship(
-        'PlayerHeroChance', back_populates='hero'
+        'PlayerHeroChance', cascade='all, delete-orphan', back_populates='hero'
     )

@@ -80,7 +80,7 @@ async def read_team_stats(
     response_model=TeamResponse, response_model_exclude_unset=True
 )
 async def create_team(
-    payload: TeamSchema = Depends(), db_session: AsyncSession = Depends(get_session)
+    payload: TeamSchema, db_session: AsyncSession = Depends(get_session)
 ):
     team = await create_object_or_raise_400(db_session, Team, **payload.model_dump())
     return TeamResponse(**team.__dict__).model_dump(exclude_unset=True)
@@ -91,7 +91,7 @@ async def create_team(
     response_model=TeamResponse, response_model_exclude_unset=True
 )
 async def update_team(
-    team_id: int = Path(...), payload: PartialTeamSchema = Depends(),
+    payload: PartialTeamSchema, team_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
     team = await get_object_or_raise_404(db_session, Team, team_id)

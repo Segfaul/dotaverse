@@ -50,7 +50,7 @@ async def read_matchplayer(
     response_model=MatchPlayerResponse, response_model_exclude_unset=True
 )
 async def create_matchplayer(
-    payload: MatchPlayerSchema = Depends(), db_session: AsyncSession = Depends(get_session)
+    payload: MatchPlayerSchema, db_session: AsyncSession = Depends(get_session)
 ):
     matchplayer = await create_object_or_raise_400(db_session, MatchPlayer, **payload.model_dump())
     return MatchPlayerResponse(**matchplayer.__dict__).model_dump(exclude_unset=True)
@@ -61,7 +61,7 @@ async def create_matchplayer(
     response_model=MatchPlayerResponse, response_model_exclude_unset=True
 )
 async def update_matchplayer(
-    matchplayer_id: int = Path(...), payload: PartialMatchPlayerSchema = Depends(),
+    payload: PartialMatchPlayerSchema, matchplayer_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
     matchplayer = await get_object_or_raise_404(db_session, MatchPlayer, matchplayer_id)

@@ -1,6 +1,7 @@
 from typing import List, Optional
 
 from fastapi import APIRouter, Depends, Path, status, Request
+from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -79,10 +80,51 @@ async def read_match_stats(
     response_model=MatchResponse, response_model_exclude_unset=True
 )
 async def create_match(
-    payload: MatchSchema = Depends(), db_session: AsyncSession = Depends(get_session)
+    payload: MatchSchema, db_session: AsyncSession = Depends(get_session)
 ):
     match = await create_object_or_raise_400(db_session, Match, **payload.model_dump())
     return MatchResponse(**match.__dict__).model_dump(exclude_unset=True)
+
+
+@router.post(
+    "/calculate", status_code=status.HTTP_201_CREATED,
+)
+async def calculate_match(
+    request: Request,
+    db_session: AsyncSession = Depends(get_session)
+):
+
+    teams = await request.json()
+    team_win_chances = {}
+    for team_id, players in teams.items():
+        win_chance = 1
+        for player in players:
+            win_chance += player['chosen_phc']['win_percentage']
+        win_chance = round(win_chance/5, 4)
+        team_win_chances[team_id] = win_chance
+
+    winner_id = max(team_win_chances, key=team_win_chances.get)
+
+    match = await Match.create(db_session)
+
+    for team_id, players in teams.items():
+        match_team = await MatchTeam.create(
+            db_session, team_id=team_id, match_id=match.id, is_winner=(team_id==winner_id)
+        )
+        await db_session.execute(
+            MatchPlayer.__table__.insert(),
+            [
+                {
+                    'matchteam_id': match_team.id,
+                    'player_id': player['id'],
+                    'match_id': match.id,
+                    'playerherochance_id': player['chosen_phc']['id'],
+                    'hero_id': player['chosen_phc']['hero_id']
+                } for player in players
+            ]
+        )
+
+    return RedirectResponse(f'{match.id}/stats', status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.patch(
@@ -90,7 +132,7 @@ async def create_match(
     response_model=MatchResponse, response_model_exclude_unset=True
 )
 async def update_match(
-    match_id: int = Path(...), payload: PartialMatchSchema = Depends(),
+    payload: PartialMatchSchema, match_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
     match = await get_object_or_raise_404(db_session, Match, match_id)

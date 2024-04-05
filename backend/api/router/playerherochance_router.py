@@ -53,7 +53,7 @@ async def read_playerherochance(
     response_model=PlayerHeroChanceResponse, response_model_exclude_unset=True
 )
 async def create_playerherochance(
-    payload: PlayerHeroChanceSchema = Depends(), db_session: AsyncSession = Depends(get_session)
+    payload: PlayerHeroChanceSchema, db_session: AsyncSession = Depends(get_session)
 ):
     playerherochance = await create_object_or_raise_400(
         db_session, PlayerHeroChance, **payload.model_dump()
@@ -66,7 +66,7 @@ async def create_playerherochance(
     response_model=PlayerHeroChanceResponse, response_model_exclude_unset=True
 )
 async def update_playerherochance(
-    playerherochance_id: int = Path(...), payload: PartialPlayerHeroChanceSchema = Depends(),
+    payload: PartialPlayerHeroChanceSchema, playerherochance_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
     playerherochance = await get_object_or_raise_404(
