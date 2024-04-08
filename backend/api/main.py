@@ -5,7 +5,8 @@ from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from backend.api.router import hero_router, \
     match_router, matchplayer_router, matchteam_router, \
     player_router, playerherochance_router, \
-    request_router, team_router, teamplayer_router
+    request_router, team_router, teamplayer_router, \
+    user_router
 
 tags_metadata = [
     {
@@ -73,6 +74,7 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
+app.include_router(user_router, prefix="/api")
 app.include_router(hero_router, prefix="/api")
 app.include_router(match_router, prefix="/api")
 app.include_router(matchplayer_router, prefix="/api")

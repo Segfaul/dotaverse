@@ -19,6 +19,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+celerybeat-schedule
 
 
 # dependencies
@@ -26,6 +27,7 @@ node_modules/
 versions/
 package-lock.json
 data.json
+data_reserve.json
 .pnp/
 .pnp.js
 

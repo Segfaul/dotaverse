@@ -70,7 +70,7 @@ class CRUDMixin:
     async def update(cls, session: AsyncSession, item, **kwargs):
         if item:
             for key, value in kwargs.items():
-                if hasattr(item, key) and value:
+                if hasattr(item, key) and value is not None:
                     setattr(item, key, value)
             await session.commit()
         return item

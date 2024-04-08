@@ -38,7 +38,7 @@ async def get_response(link: str) -> list | None:
         async with session.get(
             url=link,
             proxy=PROXY,
-            headers={'user-agent': HEADERS['user_agents'][0]} if HEADERS else {}
+            headers={'user-agent': HEADERS['user_agents'][1]} if HEADERS else {}
         ) as response:
             if response.status != 200:
                 print(response, response.status, sep='\n')
@@ -127,10 +127,18 @@ async def get_data_from_opendota():
     with open('backend/config/opendota_links.json', 'r', encoding='utf-8') as link_file:
         opendota_link = json.load(link_file)
 
-    teams = await get_response(opendota_link['link'])
+    teams = await get_response(opendota_link['fast_link'])
+    for i in range(3, 99, 3):
+        await asyncio.sleep(5)
+        group_of_teams = await get_response(
+            opendota_link['fast_link'].replace('OFFSET%200', f'OFFSET%20{i}')
+        )
+        if group_of_teams:
+            teams['rows'] += group_of_teams['rows']
 
-    with open('backend/config/data.json', 'w', encoding='utf-8') as record_file:
-        json.dump(teams['rows'], record_file, indent=4)
+    if teams:
+        with open('backend/config/data.json', 'w', encoding='utf-8') as record_file:
+            json.dump(teams['rows'], record_file, indent=4)
 
 
 # asyncio.run(populate_db_from_opendota())

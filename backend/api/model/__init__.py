@@ -8,3 +8,4 @@ from .playerherochance import PlayerHeroChance
 from .request import Request
 from .team import Team
 from .teamplayer import TeamPlayer
+from .user import User

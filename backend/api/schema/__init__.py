@@ -17,3 +17,5 @@ from .team_schema import TeamSchema, PartialTeamSchema, \
     IndependentTeamSchema, TeamResponse
 from .teamplayer_schema import TeamPlayerSchema, PartialTeamPlayerSchema, \
     IndependentTeamPlayerSchema, TeamPlayerResponse
+from .user_schema import UserSchema, PartialUserSchema, \
+    IndependentUserSchema, UserResponse, TokenSchema
