@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
-    update_object_or_raise_400
+    update_object_or_raise_400, auth_admin
 from backend.api.model import PlayerHeroChance
 from backend.api.schema import PlayerHeroChanceSchema, PartialPlayerHeroChanceSchema, PlayerHeroChanceResponse
 
@@ -49,7 +49,7 @@ async def read_playerherochance(
 
 
 @router.post(
-    "/", status_code=status.HTTP_201_CREATED,
+    "/", status_code=status.HTTP_201_CREATED, dependencies=[Depends(auth_admin)],
     response_model=PlayerHeroChanceResponse, response_model_exclude_unset=True
 )
 async def create_playerherochance(
@@ -62,7 +62,7 @@ async def create_playerherochance(
 
 
 @router.patch(
-    "/{playerherochance_id}", status_code=status.HTTP_200_OK,
+    "/{playerherochance_id}", status_code=status.HTTP_200_OK, dependencies=[Depends(auth_admin)],
     response_model=PlayerHeroChanceResponse, response_model_exclude_unset=True
 )
 async def update_playerherochance(
@@ -79,7 +79,7 @@ async def update_playerherochance(
 
 
 @router.delete(
-    "/{playerherochance_id}", status_code=status.HTTP_204_NO_CONTENT
+    "/{playerherochance_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(auth_admin)]
 )
 async def delete_playerherochance(
     playerherochance_id: int = Path(...), db_session: AsyncSession = Depends(get_session)

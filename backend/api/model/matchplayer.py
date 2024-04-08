@@ -22,8 +22,10 @@ class MatchPlayer(Base, CRUDMixin):
         id of the player associated with the record
     hero_id : int
         id of the hero associated with the record
-    chance_id : int
+    playerherochance_id : int
         id of the winning chance associatedwith the player_hero
+    matchteam_id : int
+        id of the match team associated with the entry
     match_id : int
         id of the match associated with the entry
     '''

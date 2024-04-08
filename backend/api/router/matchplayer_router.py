@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
-    update_object_or_raise_400
+    update_object_or_raise_400, auth_admin
 from backend.api.model import MatchPlayer
 from backend.api.schema import MatchPlayerSchema, PartialMatchPlayerSchema, MatchPlayerResponse
 
@@ -46,7 +46,7 @@ async def read_matchplayer(
 
 
 @router.post(
-    "/", status_code=status.HTTP_201_CREATED,
+    "/", status_code=status.HTTP_201_CREATED, dependencies=[Depends(auth_admin)],
     response_model=MatchPlayerResponse, response_model_exclude_unset=True
 )
 async def create_matchplayer(
@@ -57,7 +57,7 @@ async def create_matchplayer(
 
 
 @router.patch(
-    "/{matchplayer_id}", status_code=status.HTTP_200_OK,
+    "/{matchplayer_id}", status_code=status.HTTP_200_OK, dependencies=[Depends(auth_admin)],
     response_model=MatchPlayerResponse, response_model_exclude_unset=True
 )
 async def update_matchplayer(
@@ -70,7 +70,7 @@ async def update_matchplayer(
 
 
 @router.delete(
-    "/{matchplayer_id}", status_code=status.HTTP_204_NO_CONTENT
+    "/{matchplayer_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(auth_admin)]
 )
 async def delete_matchplayer(
     matchplayer_id: int = Path(...), db_session: AsyncSession = Depends(get_session)

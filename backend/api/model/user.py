@@ -15,6 +15,8 @@ class User(Base, CRUDMixin):
         username
     password : str
         hashed password
+    is_admin : bool
+        does user have admin rights
     created_at : datetime
         date the request was created
     '''

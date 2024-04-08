@@ -15,6 +15,8 @@ class TeamPlayer(Base, CRUDMixin):
 
     Attributes
     ----------
+    player_id: int
+        id of the player associated with team entry
     team_id : int
         id of the team the player belongs to
     created_at : datetime

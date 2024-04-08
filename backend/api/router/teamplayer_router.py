@@ -5,7 +5,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
-    update_object_or_raise_400
+    update_object_or_raise_400, auth_admin
 from backend.api.model import TeamPlayer
 from backend.api.schema import TeamPlayerSchema, PartialTeamPlayerSchema, TeamPlayerResponse
 
@@ -47,7 +47,7 @@ async def read_teamplayer(
 
 
 @router.post(
-    "/", status_code=status.HTTP_201_CREATED,
+    "/", status_code=status.HTTP_201_CREATED, dependencies=[Depends(auth_admin)],
     response_model=TeamPlayerResponse, response_model_exclude_unset=True
 )
 async def create_teamplayer(
@@ -58,7 +58,7 @@ async def create_teamplayer(
 
 
 @router.patch(
-    "/{teamplayer_id}", status_code=status.HTTP_200_OK,
+    "/{teamplayer_id}", status_code=status.HTTP_200_OK, dependencies=[Depends(auth_admin)],
     response_model=TeamPlayerResponse, response_model_exclude_unset=True
 )
 async def update_teamplayer(
@@ -71,7 +71,7 @@ async def update_teamplayer(
 
 
 @router.delete(
-    "/{teamplayer_id}", status_code=status.HTTP_204_NO_CONTENT
+    "/{teamplayer_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(auth_admin)]
 )
 async def delete_teamplayer(
     teamplayer_id: int = Path(...), db_session: AsyncSession = Depends(get_session)

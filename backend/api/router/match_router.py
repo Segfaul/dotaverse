@@ -7,7 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
-    update_object_or_raise_400
+    update_object_or_raise_400, auth_admin
 from backend.api.model import Match, MatchTeam, MatchPlayer
 from backend.api.schema import MatchSchema, PartialMatchSchema, MatchResponse, MatchStatsSchema
 
@@ -76,7 +76,7 @@ async def read_match_stats(
 
 
 @router.post(
-    "/", status_code=status.HTTP_201_CREATED,
+    "/", status_code=status.HTTP_201_CREATED, dependencies=[Depends(auth_admin)],
     response_model=MatchResponse, response_model_exclude_unset=True
 )
 async def create_match(
@@ -106,29 +106,33 @@ async def calculate_match(
     winner_id = max(team_win_chances, key=team_win_chances.get)
 
     match = await Match.create(db_session)
-
+    match_players: List[MatchPlayer.__dict__] = []
     for team_id, players in teams.items():
         match_team = await MatchTeam.create(
             db_session, team_id=team_id, match_id=match.id, is_winner=(team_id==winner_id)
         )
-        await db_session.execute(
-            MatchPlayer.__table__.insert(),
-            [
-                {
-                    'matchteam_id': match_team.id,
-                    'player_id': player['id'],
-                    'match_id': match.id,
-                    'playerherochance_id': player['chosen_phc']['id'],
-                    'hero_id': player['chosen_phc']['hero_id']
-                } for player in players
-            ]
-        )
+        player_data: List[MatchPlayer.__dict__] = [
+            MatchPlayer(
+                player_id=player['id'],
+                hero_id=player['chosen_phc']['hero_id'],
+                playerherochance_id=player['chosen_phc']['id'],
+                matchteam_id=match_team.id,
+                match_id=match.id
+            ).__dict__ for player in players
+        ]
+        match_players += player_data
+
+    await db_session.execute(
+        MatchPlayer.__table__.insert(),
+        match_players
+    )
+    await db_session.commit()
 
     return RedirectResponse(f'{match.id}/stats', status_code=status.HTTP_303_SEE_OTHER)
 
 
 @router.patch(
-    "/{match_id}", status_code=status.HTTP_200_OK,
+    "/{match_id}", status_code=status.HTTP_200_OK, dependencies=[Depends(auth_admin)],
     response_model=MatchResponse, response_model_exclude_unset=True
 )
 async def update_match(
@@ -141,7 +145,7 @@ async def update_match(
 
 
 @router.delete(
-    "/{match_id}", status_code=status.HTTP_204_NO_CONTENT
+    "/{match_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(auth_admin)]
 )
 async def delete_match(
     match_id: int = Path(...), db_session: AsyncSession = Depends(get_session)
