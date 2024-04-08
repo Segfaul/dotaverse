@@ -30,10 +30,16 @@ class CRUDMixin:
                 if key.startswith('include_'):
                     related_attr = getattr(cls, key[8:], None)
                     if related_attr and int(value):
-                        stmt = stmt.options(selectinload(related_attr))
+                        if stmt.__dict__.get('_where_criteria', None) is not None:
+                            stmt = stmt.options(selectinload(related_attr))
                 else:
                     related_attr = getattr(cls, key, None)
-                    stmt = stmt.filter(related_attr==value)
+                    if related_attr:
+                        if len(value) > 0:
+                            stmt = stmt.filter(related_attr==value)
+                        else:
+                            stmt = stmt.order_by(related_attr)
+
         if args:
             for arg in args:
                 if isinstance(arg, Load):
@@ -47,7 +53,11 @@ class CRUDMixin:
     async def read_all(cls, session: AsyncSession, *args, **kwargs) -> AsyncIterator:
         stmt = select(cls)
         stmt = cls.apply_includes(stmt, *args, **kwargs)
-        stream = await session.stream_scalars(stmt.order_by(cls.id))
+        limit = int(kwargs.get('limit', 500)) if str(kwargs.get('limit', 500)).isdigit() else 500
+        offset = int(kwargs.get('offset', 0)) if str(kwargs.get('offset', 0)).isdigit() else 0
+        stream = await session.stream_scalars(
+            stmt.order_by(cls.id).limit(min(limit, 500)).offset(offset)
+        )
         async for row in stream.unique():
             yield row
 
