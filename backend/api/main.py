@@ -5,7 +5,10 @@ from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
+from slowapi import _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
+from backend.config import limiter
 from backend.api.router import hero_router, \
     match_router, matchplayer_router, matchteam_router, \
     player_router, playerherochance_router, \
@@ -64,6 +67,9 @@ app = FastAPI(
     openapi_tags=tags_metadata,
     docs_url=None, redoc_url=None,
 )
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 origins = [
     "http://localhost:3000",

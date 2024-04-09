@@ -73,7 +73,7 @@ class CRUDMixin:
         item = cls(**kwargs)
         session.add(item)
         await session.commit()
-        new_item = await cls.read_by_id(session, item.id)
+        new_item = await cls.read_by_id(session, item_id=item.id)
         return new_item if new_item else RuntimeError()
 
     @classmethod

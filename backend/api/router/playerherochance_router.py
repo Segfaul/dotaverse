@@ -3,6 +3,7 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends, Path, status, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.config import limiter
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
     update_object_or_raise_400, auth_admin
@@ -18,6 +19,7 @@ router = APIRouter(
     "/", status_code=status.HTTP_200_OK,
     response_model=List[PlayerHeroChanceResponse], response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_all_playerherochances(
     request: Request,
     include_match_players: Optional[bool] = 0,
@@ -36,7 +38,9 @@ async def read_all_playerherochances(
     "/{playerherochance_id}", status_code=status.HTTP_200_OK,
     response_model=PlayerHeroChanceResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_playerherochance(
+    request: Request,
     playerherochance_id: int = Path(...),
     include_match_players: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
@@ -52,7 +56,9 @@ async def read_playerherochance(
     "/", status_code=status.HTTP_201_CREATED, dependencies=[Depends(auth_admin)],
     response_model=PlayerHeroChanceResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def create_playerherochance(
+    request: Request,
     payload: PlayerHeroChanceSchema, db_session: AsyncSession = Depends(get_session)
 ):
     playerherochance = await create_object_or_raise_400(
@@ -65,7 +71,9 @@ async def create_playerherochance(
     "/{playerherochance_id}", status_code=status.HTTP_200_OK, dependencies=[Depends(auth_admin)],
     response_model=PlayerHeroChanceResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def update_playerherochance(
+    request: Request,
     payload: PartialPlayerHeroChanceSchema, playerherochance_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
@@ -81,7 +89,9 @@ async def update_playerherochance(
 @router.delete(
     "/{playerherochance_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(auth_admin)]
 )
+@limiter.limit("45/minute")
 async def delete_playerherochance(
+    request: Request,
     playerherochance_id: int = Path(...), db_session: AsyncSession = Depends(get_session)
 ):
     playerherochance = await get_object_or_raise_404(

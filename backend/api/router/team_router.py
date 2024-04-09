@@ -4,10 +4,11 @@ from fastapi import APIRouter, Depends, Path, status, Request
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.config import limiter
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
     update_object_or_raise_400, auth_admin
-from backend.api.model import Team, Player, TeamPlayer, PlayerHeroChance, MatchPlayer, Match
+from backend.api.model import Team, Player, TeamPlayer, PlayerHeroChance, Match, MatchTeam
 from backend.api.schema import TeamSchema, PartialTeamSchema, TeamResponse, TeamStatsSchema
 
 router = APIRouter(
@@ -19,6 +20,7 @@ router = APIRouter(
     "/", status_code=status.HTTP_200_OK,
     response_model=List[TeamResponse], response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_all_teams(
     request: Request,
     include_team_players: Optional[bool] = 0,
@@ -38,7 +40,9 @@ async def read_all_teams(
     "/{team_id}", status_code=status.HTTP_200_OK,
     response_model=TeamResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_team(
+    request: Request,
     team_id: int = Path(...),
     include_team_players: Optional[bool] = 0,
     include_match_teams: Optional[bool] = 0,
@@ -55,7 +59,9 @@ async def read_team(
     "/{team_id}/stats", status_code=status.HTTP_200_OK,
     response_model=TeamStatsSchema, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_team_stats(
+    request: Request,
     team_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
@@ -65,12 +71,10 @@ async def read_team_stats(
             .subqueryload(TeamPlayer.player)
                 .subqueryload(Player.player_hero_chances)
                     .subqueryload(PlayerHeroChance.hero),
-        joinedload(Team.team_players)
-            .subqueryload(TeamPlayer.player)
-                .subqueryload(Player.match_players)
-                    .subqueryload(MatchPlayer.match)
-                        .subqueryload(Match.match_teams),
         joinedload(Team.match_teams)
+            .subqueryload(MatchTeam.match)
+                .subqueryload(Match.match_teams)
+                    .subqueryload(MatchTeam.team)
     )
     return TeamStatsSchema(**team.__dict__).model_dump(exclude_unset=True)
 
@@ -79,7 +83,9 @@ async def read_team_stats(
     "/", status_code=status.HTTP_201_CREATED, dependencies=[Depends(auth_admin)],
     response_model=TeamResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def create_team(
+    request: Request,
     payload: TeamSchema, db_session: AsyncSession = Depends(get_session)
 ):
     team = await create_object_or_raise_400(db_session, Team, **payload.model_dump())
@@ -90,7 +96,9 @@ async def create_team(
     "/{team_id}", status_code=status.HTTP_200_OK, dependencies=[Depends(auth_admin)],
     response_model=TeamResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def update_team(
+    request: Request,
     payload: PartialTeamSchema, team_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
@@ -102,7 +110,9 @@ async def update_team(
 @router.delete(
     "/{team_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(auth_admin)]
 )
+@limiter.limit("45/minute")
 async def delete_team(
+    request: Request,
     team_id: int = Path(...), db_session: AsyncSession = Depends(get_session)
 ):
     team = await get_object_or_raise_404(db_session, Team, team_id)

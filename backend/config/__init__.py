@@ -3,11 +3,15 @@ import logging
 import os
 
 from dotenv import load_dotenv
+from slowapi import Limiter
+from slowapi.util import get_remote_address
 
 env = os.environ.get
 load_dotenv('./.env')
 
 LOG_LEVEL = env('LOG_LEVEL').upper()
+
+limiter = Limiter(key_func=get_remote_address)
 
 logger = logging.getLogger("Dotaverse")
 

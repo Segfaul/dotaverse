@@ -1,34 +1,39 @@
-from typing import List, Optional
+from typing import List
 
 from fastapi import APIRouter, Depends, Path, status, Request
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.config import limiter
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
     update_object_or_raise_400, auth_admin
 from backend.api.model import Match, MatchTeam, MatchPlayer
 from backend.api.schema import MatchSchema, PartialMatchSchema, MatchResponse, MatchStatsSchema
+from backend.api.schema.stats_schema import IndependentMatchStatsSchema
 
 router = APIRouter(
     prefix="/v1/match",
     tags=['Match']
 )
 
+
 @router.get(
     "/", status_code=status.HTTP_200_OK,
-    response_model=List[MatchResponse], response_model_exclude_unset=True
+    response_model=List[IndependentMatchStatsSchema], response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_all_matches(
     request: Request,
-    include_match_teams: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
 ):
     return [
-        MatchResponse(**match.__dict__).model_dump(exclude_unset=True) \
+        IndependentMatchStatsSchema(**match.__dict__).model_dump(exclude_unset=True) \
         async for match in Match.read_all(
             db_session,
+            joinedload(Match.match_teams)
+                .subqueryload(MatchTeam.team),
             **dict(request.query_params)
         )
     ]
@@ -36,25 +41,29 @@ async def read_all_matches(
 
 @router.get(
     "/{match_id}", status_code=status.HTTP_200_OK,
-    response_model=MatchResponse, response_model_exclude_unset=True
+    response_model=IndependentMatchStatsSchema, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_match(
+    request: Request,
     match_id: int = Path(...),
-    include_match_teams: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
 ):
     match = await get_object_or_raise_404(
         db_session, Match, match_id,
-        include_match_teams=include_match_teams
+        joinedload(Match.match_teams)
+            .subqueryload(MatchTeam.team),
     )
-    return MatchResponse(**match.__dict__).model_dump(exclude_unset=True)
+    return IndependentMatchStatsSchema(**match.__dict__).model_dump(exclude_unset=True)
 
 
 @router.get(
     "/{match_id}/stats", status_code=status.HTTP_200_OK,
     response_model=MatchStatsSchema, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_match_stats(
+    request: Request,
     match_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
@@ -79,7 +88,9 @@ async def read_match_stats(
     "/", status_code=status.HTTP_201_CREATED, dependencies=[Depends(auth_admin)],
     response_model=MatchResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def create_match(
+    request: Request,
     payload: MatchSchema, db_session: AsyncSession = Depends(get_session)
 ):
     match = await create_object_or_raise_400(db_session, Match, **payload.model_dump())
@@ -89,6 +100,7 @@ async def create_match(
 @router.post(
     "/calculate", status_code=status.HTTP_201_CREATED,
 )
+@limiter.limit("45/minute")
 async def calculate_match(
     request: Request,
     db_session: AsyncSession = Depends(get_session)
@@ -135,7 +147,9 @@ async def calculate_match(
     "/{match_id}", status_code=status.HTTP_200_OK, dependencies=[Depends(auth_admin)],
     response_model=MatchResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def update_match(
+    request: Request,
     payload: PartialMatchSchema, match_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
@@ -147,7 +161,9 @@ async def update_match(
 @router.delete(
     "/{match_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(auth_admin)]
 )
+@limiter.limit("45/minute")
 async def delete_match(
+    request: Request,
     match_id: int = Path(...), db_session: AsyncSession = Depends(get_session)
 ):
     match = await get_object_or_raise_404(db_session, Match, match_id)

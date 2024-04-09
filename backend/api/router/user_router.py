@@ -5,6 +5,7 @@ from fastapi import APIRouter, Depends, Path, status, Request, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from backend.config import limiter
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
     update_object_or_raise_400, \
@@ -19,8 +20,10 @@ router = APIRouter(
 )
 
 
-@router.post("/token")
+@router.post("/token", status_code=status.HTTP_201_CREATED)
+@limiter.limit("45/minute")
 async def login_for_access_token(
+    request: Request,
     form_data: Annotated[OAuth2PasswordRequestForm, Depends()],
     db_session: AsyncSession = Depends(get_session)
 ) -> TokenSchema:
@@ -45,6 +48,7 @@ async def login_for_access_token(
     "/", status_code=status.HTTP_200_OK, dependencies=[Depends(auth_admin)],
     response_model=List[UserResponse], response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_all_users(
     request: Request,
     db_session: AsyncSession = Depends(get_session)
@@ -62,7 +66,9 @@ async def read_all_users(
     "/me", status_code=status.HTTP_200_OK,
     response_model=UserResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_user_me(
+    request: Request,
     current_user: Annotated[UserSchema, Depends(auth_user)]
 ):
     return current_user
@@ -72,7 +78,9 @@ async def read_user_me(
     "/{user_id}", status_code=status.HTTP_200_OK,
     response_model=UserResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def read_user(
+    request: Request,
     current_user: Annotated[UserSchema, Depends(auth_user)],
     user_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
@@ -93,7 +101,9 @@ async def read_user(
     "/register", status_code=status.HTTP_201_CREATED,
     response_model=UserResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def create_user(
+    request: Request,
     payload: UserSchema, db_session: AsyncSession = Depends(get_session)
 ):
     payload.password = await get_password_hash(payload.password)
@@ -105,7 +115,9 @@ async def create_user(
     "/{user_id}", status_code=status.HTTP_200_OK,
     response_model=UserResponse, response_model_exclude_unset=True
 )
+@limiter.limit("45/minute")
 async def update_user(
+    request: Request,
     payload: PartialUserSchema,
     current_user: Annotated[UserSchema, Depends(auth_user)],
     user_id: int = Path(...),
@@ -127,7 +139,9 @@ async def update_user(
 @router.delete(
     "/{user_id}", status_code=status.HTTP_204_NO_CONTENT
 )
+@limiter.limit("45/minute")
 async def delete_user(
+    request: Request,
     current_user: Annotated[UserSchema, Depends(auth_user)],
     user_id: int = Path(...), db_session: AsyncSession = Depends(get_session)
 ):
