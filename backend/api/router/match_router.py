@@ -1,6 +1,7 @@
+import asyncio
 from typing import List
 
-from fastapi import APIRouter, Depends, Path, status, Request
+from fastapi import APIRouter, Depends, Path, status, Request, WebSocket, HTTPException
 from fastapi.responses import RedirectResponse
 from sqlalchemy.orm import joinedload
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,35 +9,56 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.config import limiter
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
-    update_object_or_raise_400, auth_admin
+    update_object_or_raise_400, auth_admin, process_query_params, cache
 from backend.api.model import Match, MatchTeam, MatchPlayer
-from backend.api.schema import MatchSchema, PartialMatchSchema, MatchResponse, MatchStatsSchema
-from backend.api.schema.stats_schema import IndependentMatchStatsSchema
+from backend.api.schema import MatchSchema, PartialMatchSchema, MatchResponse, MatchStatsSchema, \
+    IndependentMatchStatsSchema
 
 router = APIRouter(
     prefix="/v1/match",
     tags=['Match']
 )
 
-
 @router.get(
     "/", status_code=status.HTTP_200_OK,
     response_model=List[IndependentMatchStatsSchema], response_model_exclude_unset=True
 )
 @limiter.limit("45/minute")
+@cache(expire=150)
 async def read_all_matches(
     request: Request,
     db_session: AsyncSession = Depends(get_session)
 ):
+    query_params: dict = process_query_params(request)
     return [
         IndependentMatchStatsSchema(**match.__dict__).model_dump(exclude_unset=True) \
         async for match in Match.read_all(
             db_session,
             joinedload(Match.match_teams)
                 .subqueryload(MatchTeam.team),
-            **dict(request.query_params)
+            **query_params
         )
     ]
+
+
+@router.websocket('/ws')
+async def read_all_matches_ws(
+    websocket: WebSocket,
+    db_session: AsyncSession = Depends(get_session)
+):
+    await websocket.accept()
+    while True:
+        matches = [
+            IndependentMatchStatsSchema(**match.__dict__).model_dump_json(exclude_unset=True) \
+            async for match in Match.read_all(
+                db_session,
+                joinedload(Match.match_teams)
+                    .subqueryload(MatchTeam.team),
+                limit=100
+            )
+        ]
+        await websocket.send_json(matches)
+        await asyncio.sleep(5)
 
 
 @router.get(
@@ -44,6 +66,7 @@ async def read_all_matches(
     response_model=IndependentMatchStatsSchema, response_model_exclude_unset=True
 )
 @limiter.limit("45/minute")
+@cache(expire=600)
 async def read_match(
     request: Request,
     match_id: int = Path(...),
@@ -62,6 +85,7 @@ async def read_match(
     response_model=MatchStatsSchema, response_model_exclude_unset=True
 )
 @limiter.limit("45/minute")
+@cache(expire=600)
 async def read_match_stats(
     request: Request,
     match_id: int = Path(...),
@@ -105,12 +129,21 @@ async def calculate_match(
     request: Request,
     db_session: AsyncSession = Depends(get_session)
 ):
-
+    require_exception = HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        detail="Invalid input for teams or players. Expected 2 teams with 5 players each."
+    )
     teams = await request.json()
+    if len(teams) != 2:
+        raise require_exception
     team_win_chances = {}
     for team_id, players in teams.items():
+        if len(players) != 5:
+            raise require_exception
         win_chance = 1
         for player in players:
+            if player['team_id'] != int(team_id):
+                raise require_exception
             win_chance += player['chosen_phc']['win_percentage']
         win_chance = round(win_chance/5, 4)
         team_win_chances[team_id] = win_chance

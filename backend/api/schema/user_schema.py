@@ -58,6 +58,13 @@ class UserResponse(IndependentUserSchema):
 class TokenSchema(BaseModel):
     """
     Pydantic schema for Token
+
+    Attributes:
+    -----------
+    - access_token: generated token according to user's entry.
+    - token_type: token generated type.
     """
     access_token: str
     token_type: str
+
+    model_config = ConfigDict(from_attributes=True)

@@ -35,7 +35,7 @@ class CRUDMixin:
                 else:
                     related_attr = getattr(cls, key, None)
                     if related_attr:
-                        if len(value) > 0:
+                        if len(str(value)) > 0:
                             stmt = stmt.filter(related_attr==value)
                         else:
                             stmt = stmt.order_by(related_attr)
@@ -53,10 +53,10 @@ class CRUDMixin:
     async def read_all(cls, session: AsyncSession, *args, **kwargs) -> AsyncIterator:
         stmt = select(cls)
         stmt = cls.apply_includes(stmt, *args, **kwargs)
-        limit = int(kwargs.get('limit', 500)) if str(kwargs.get('limit', 500)).isdigit() else 500
-        offset = int(kwargs.get('offset', 0)) if str(kwargs.get('offset', 0)).isdigit() else 0
+        limit = int(kwargs.get('limit')) if str(kwargs.get('limit')).isdigit() else None
+        offset = int(kwargs.get('offset')) if str(kwargs.get('offset')).isdigit() else 0
         stream = await session.stream_scalars(
-            stmt.order_by(cls.id).limit(min(limit, 500)).offset(offset)
+            stmt.order_by(cls.id).limit(limit).offset(offset)
         )
         async for row in stream.unique():
             yield row

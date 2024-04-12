@@ -1,5 +1,6 @@
 from .hero_schema import HeroSchema, PartialHeroSchema, \
     IndependentHeroSchema, HeroResponse
+from .log_schema import LogSchema
 from .match_schema import MatchSchema, PartialMatchSchema,\
     IndependentMatchSchema, MatchResponse
 from .matchteam_schema import MatchTeamSchema, PartialMatchTeamSchema, \
@@ -12,7 +13,8 @@ from .playerherochance_schema import PlayerHeroChanceSchema, PartialPlayerHeroCh
     IndependentPlayerHeroChanceSchema, PlayerHeroChanceResponse
 from .request_schema import RequestSchema, PartialRequestSchema, \
     IndependentRequestSchema, RequestResponse
-from .stats_schema import TeamStatsSchema, PlayerStatsSchema, MatchStatsSchema
+from .stats_schema import TeamStatsSchema, PlayerStatsSchema, MatchStatsSchema, \
+    IndependentMatchStatsSchema
 from .team_schema import TeamSchema, PartialTeamSchema, \
     IndependentTeamSchema, TeamResponse
 from .teamplayer_schema import TeamPlayerSchema, PartialTeamPlayerSchema, \

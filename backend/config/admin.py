@@ -21,7 +21,6 @@ async def create_admin(username: str, password: str) -> None:
         user = await User.create(
             session, username=username, password=hashed_password, is_admin=1
         )
-    print(f"Admin user '{user.username}' created.")
 
 
 def main():
@@ -36,7 +35,7 @@ def main():
 
     try:
         asyncio.run(create_admin(username, password))
-        print("Admin user created successfully.")
+        print(f"Admin {username} created successfully.")
     except Exception as e:
         print(f"Error creating admin user: {e}")
 

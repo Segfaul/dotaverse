@@ -10,7 +10,7 @@ from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
     update_object_or_raise_400, \
     get_password_hash, authenticate_user, create_access_token, \
-    ACCESS_TOKEN_EXPIRE_MINUTES, auth_user, auth_admin
+    ACCESS_TOKEN_EXPIRE_MINUTES, auth_user, auth_admin, process_query_params, cache
 from backend.api.model import User
 from backend.api.schema import UserSchema, PartialUserSchema, UserResponse, TokenSchema
 
@@ -18,7 +18,6 @@ router = APIRouter(
     prefix="/v1/user",
     tags=['User']
 )
-
 
 @router.post("/token", status_code=status.HTTP_201_CREATED)
 @limiter.limit("45/minute")
@@ -49,15 +48,17 @@ async def login_for_access_token(
     response_model=List[UserResponse], response_model_exclude_unset=True
 )
 @limiter.limit("45/minute")
+@cache(expire=60)
 async def read_all_users(
     request: Request,
     db_session: AsyncSession = Depends(get_session)
 ):
+    query_params: dict = process_query_params(request)
     return [
         UserResponse(**user.__dict__).model_dump(exclude_unset=True) \
         async for user in User.read_all(
             db_session,
-            **dict(request.query_params)
+            **query_params
         )
     ]
 
@@ -85,7 +86,7 @@ async def read_user(
     user_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
-    if (user.id == current_user['id']) or current_user['is_admin']:
+    if (user_id == current_user['id']) or current_user['is_admin']:
         user = await get_object_or_raise_404(
             db_session, User, user_id,
         )
@@ -123,8 +124,8 @@ async def update_user(
     user_id: int = Path(...),
     db_session: AsyncSession = Depends(get_session)
 ):
-    user = await get_object_or_raise_404(db_session, User, user_id)
-    if (user.id == current_user['id'] and payload.is_admin is None) or current_user['is_admin']:
+    if (user_id == current_user['id'] and payload.is_admin is None) or current_user['is_admin']:
+        user = await get_object_or_raise_404(db_session, User, user_id)
         if payload.password:
             payload.password = await get_password_hash(payload.password)
         await update_object_or_raise_400(db_session, User, user, **payload.model_dump())
@@ -145,7 +146,7 @@ async def delete_user(
     current_user: Annotated[UserSchema, Depends(auth_user)],
     user_id: int = Path(...), db_session: AsyncSession = Depends(get_session)
 ):
-    if (user.id == current_user['id']) or current_user['is_admin']:
+    if (user_id == current_user['id']) or current_user['is_admin']:
         user = await get_object_or_raise_404(db_session, User, user_id)
         await User.delete(db_session, user)
     else:

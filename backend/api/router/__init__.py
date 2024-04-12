@@ -1,4 +1,5 @@
 from .hero_router import router as hero_router
+from .log_router import router as log_router
 from .match_router import router as match_router
 from .matchplayer_router import router as matchplayer_router
 from .matchteam_router import router as matchteam_router

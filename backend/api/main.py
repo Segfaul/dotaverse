@@ -1,5 +1,6 @@
 import time
 import asyncio
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, status
 from fastapi.responses import JSONResponse
@@ -9,11 +10,12 @@ from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
 from backend.config import limiter
-from backend.api.router import hero_router, \
+from backend.api.router import hero_router, log_router, \
     match_router, matchplayer_router, matchteam_router, \
     player_router, playerherochance_router, \
     request_router, team_router, teamplayer_router, \
     user_router
+from backend.api.service.redis_service import get_redis
 
 tags_metadata = [
     {
@@ -54,6 +56,19 @@ tags_metadata = [
     },
 ]
 
+
+@asynccontextmanager
+async def lifespan(app_instance: FastAPI):
+    '''
+    Asynchronous context manager to manage the lifespan of a FastAPI application's Redis connection.
+    '''
+    app_instance.state.redis = await get_redis()
+    try:
+        yield
+    finally:
+        await app_instance.state.redis.close()
+
+
 app = FastAPI(
     title="Dotaverse API",
     summary="Chilled api service for predicting Dota 2 matches 🐍",
@@ -66,6 +81,7 @@ app = FastAPI(
     },
     openapi_tags=tags_metadata,
     docs_url=None, redoc_url=None,
+    lifespan=lifespan
 )
 
 app.state.limiter = limiter
@@ -85,6 +101,7 @@ app.add_middleware(
 )
 
 app.include_router(user_router, prefix="/api")
+app.include_router(log_router, prefix="/api")
 app.include_router(hero_router, prefix="/api")
 app.include_router(match_router, prefix="/api")
 app.include_router(matchplayer_router, prefix="/api")

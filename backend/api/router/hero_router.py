@@ -6,7 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from backend.config import limiter
 from backend.api.service.db_service import get_session
 from backend.api.util import get_object_or_raise_404, create_object_or_raise_400, \
-    update_object_or_raise_400, auth_admin
+    update_object_or_raise_400, auth_admin, process_query_params, cache
 from backend.api.model import Hero
 from backend.api.schema import HeroSchema, PartialHeroSchema, HeroResponse
 
@@ -20,17 +20,17 @@ router = APIRouter(
     response_model=List[HeroResponse], response_model_exclude_unset=True
 )
 @limiter.limit("45/minute")
+@cache(expire=3600)
 async def read_all_heroes(
     request: Request,
-    include_match_players: Optional[bool] = 0,
-    include_player_hero_chances: Optional[bool] = 0,
     db_session: AsyncSession = Depends(get_session)
 ):
+    query_params: dict = process_query_params(request)
     return [
         HeroResponse(**hero.__dict__).model_dump(exclude_unset=True) \
         async for hero in Hero.read_all(
             db_session,
-            **dict(request.query_params)
+            **query_params
         )
     ]
 
@@ -40,6 +40,7 @@ async def read_all_heroes(
     response_model=HeroResponse, response_model_exclude_unset=True
 )
 @limiter.limit("45/minute")
+@cache(expire=300)
 async def read_hero(
     request: Request,
     hero_id: int = Path(...),
