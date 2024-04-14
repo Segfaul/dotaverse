@@ -4,18 +4,15 @@ import Home from './components/Home'
 import './App.css'
 
 function App() {
-  const menuItems = ['faq', 'hero', 'player'];
 
   return (
     <BrowserRouter>
-      <div>
-        <Header title="Dotaverse" menuItems={menuItems} />
-        <main>
-          <Routes>
-              <Route path="/" element={<Home />} />
-          </Routes>
-        </main>
-      </div>
+      <Header />
+      <main>
+        <Routes>
+            <Route path="/" element={<Home />} />
+        </Routes>
+      </main>
     </BrowserRouter>
   )
 }

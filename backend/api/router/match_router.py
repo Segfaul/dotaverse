@@ -142,7 +142,7 @@ async def calculate_match(
             raise require_exception
         win_chance = 1
         for player in players:
-            if player['team_id'] != int(team_id):
+            if (player['team_id'] != int(team_id)) or (player['chosen_phc'] is None):
                 raise require_exception
             win_chance += player['chosen_phc']['win_percentage']
         win_chance = round(win_chance/5, 4)

@@ -1,36 +1,363 @@
+body {
+    display: block;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Droid Sans", Ubuntu, Cantarell, "Fira Sans", Helvetica, Arial, sans-serif;
+}
+
+#root {
+    display: flex;
+    width: auto;
+    height: auto;
+    max-width: none;
+    flex-direction: column;
+}
+
+main {
+    width: auto;
+    height: auto;
+}
+
+
+/* Header component */
 header {
     height: 100%;
-    max-width: 10vw;
+    max-width: 50vw;
+    min-width: 10vw;
     position: fixed;
     z-index: 1;
     top: 0;
     left: 0;
-    background-color: #111;
+    background-color: #202020ee;
     overflow-x: hidden;
-    transition: 0.5s;
-    padding-top: 5vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 0 10px 10px 0;
 }
 
 header a {
-    color: #ffff;
-    
-}
-  
-h1 {
-    font-size: 3em;
-    margin: 0 0.3em;
+    color: #fff;
+    font-style: none;
 }
 
-main-menu{
+header a:hover {
+    color: red;
+}
+
+header button {
+    margin: 0;
+    padding: 0;
+}
+
+.header-title {
     display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 5vh;
+    height: 1.5em;
+    padding-bottom: 3em;
+    box-shadow: 0px 0.6px 0 rgb(61, 61, 61);
+}
+
+.header-title-nav {
+    display: flex;
+    align-items: center;
+}
+
+.header-title-nav img {
+    height: 1.5em;
+    margin-right: 1em;
+    padding-bottom: 0.2em;
+    filter: brightness(0) saturate(100%) invert(100%) sepia(100%) hue-rotate(0deg) drop-shadow(5px 5px 0px #ff0000);
+}
+
+.header-title-nav span {
+    font-size: 1.5em;
+    color: rgb(204, 60, 60);
+}
+
+.header-title-nav span:hover {
+    color: rgb(189, 54, 54);
+    transition-duration: 0.2s;
+}
+
+.main-menu {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    margin: auto 0;
+}
+
+.main-menu li a {
+    display: flex;
+    align-items: center;
+    margin-left: 1.2em;
+}
+
+.main-menu li a:hover {
+    transition-duration: 0.3s;
+}
+
+.main-menu .menu-item-icon svg {
+    font-size: 1.5em;
+}
+
+.main-menu .menu-item-text {
+    margin-left: 2em;
+    font-size: 1.25em;
 }
 
 ul {
     list-style-type: none;
     padding: 0;
+    margin: 0;
 }
 
 li {
     padding: 10px;
 }
   
+.sidebar-toggle {
+    top: 0;
+    right: 0;
+    background: transparent;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    z-index: 2;
+    height: 1.5em;
+}
+
+.sidebar-toggle:focus {
+    outline: none;
+}
+
+.sidebar-toggle svg {
+    font-size: 1.5em;
+    opacity: 0.7;
+}
+
+.sidebar-toggle svg:hover {
+    opacity: 0.8;
+}
+
+.open {
+    max-width: 30vw;
+    min-width: 10vw;
+    transition: min-width 0.5s, max-width 0.5s;
+}
+
+.closed {
+    max-width: 10vw;
+    min-width: 3vw;
+    transition: min-width 0.5s, max-width 0.5s;
+}
+
+.closed .main-menu {
+    align-items: center;
+}
+
+.closed .main-menu li a {
+    margin-left: 0;
+}
+
+.chosen-menu-item {
+    background-color: rgb(31, 30, 30);
+    transition-duration: 0.1s;
+}
+
+.closed .chosen-menu-item {
+    box-shadow: -1.5px 0 0 red;
+}
+
+.open .chosen-menu-item {
+    border-left: 3px solid rgba(255, 0, 0, 0.60);
+}
+
+.chosen-menu-item span {
+    color: rgb(189, 54, 54);
+    transition-duration: 0.2s;
+}
+
+.credentials {
+    box-shadow: 0px -0.6px 0px rgb(61, 61, 61);
+    padding-top: 10px;
+    margin-top: auto;
+    margin-bottom: .5vh;
+}
+
+.credentials ul {
+    display: flex;
+    justify-content: space-around;
+}
+
+.credentials ul li a {
+    display: flex;
+    align-items: center;
+}
+
+.credentials .credential-item-icon {
+    height: 1em;
+}
+
+.credentials .credential-item-icon svg {
+    font-size: 1em;
+}
+
+.credentials .credential-item-text {
+    font-size: 1em;
+    margin-left: 0.5em;
+}
+
+.closed .credentials ul {
+    flex-wrap: wrap;
+}
+
+
+/* Home component */
+
+
+/* TeamSelector component */
+.teamselector {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.teamselector-items {
+    display: flex;
+    width: 80%;
+    justify-content: space-evenly;
+}
+  
+.teamselector-item {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 5px;
+    width: 38vw;
+    height: 23vh;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.teamselector-item h1, h2 {
+    display: none;
+}
+
+.teamselector-item select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0px 2.5px 10px #770202;
+    color: #ffffff;
+    font-style: italic;
+    font-weight: bold;
+    font-size: 1em;
+    background-color: #202020ee;
+    border-radius: 5px;
+}
+
+.teamselector-item select:focus {
+    outline: none;
+}
+
+.teamselector-item ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+}
+
+.teamselector-item li {
+    margin-bottom: 10px;
+}
+
+.teamselector-item-phc-icon {
+    height: 20px;
+}
+
+.teamselector-item-stats-player {
+    font-size: 1.1em;
+    margin: 1vh 0 1.5vh 0;
+}
+
+.teamselector-item-stats li select option {
+    display: flex;
+    align-items: center;
+}
+
+.teamselector-submit {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #d4d4d4;
+    color: #000000;
+    font-size: 18px;
+    cursor: pointer;
+    transition: color .5s, background-color .5s;
+}
+
+.teamselector-submit:focus {
+    outline: none;
+}
+
+.teamselector-submit:hover {
+    background-color: #000000;
+    color: #d4d4d4;
+    transition: color .5s, background-color .5s;
+}
+
+.teamselector-item-stats ul {
+    display: flex;
+}
+
+.teamselector-item-stats ul li {
+    max-width: 7vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.teamselector-item-stats ul li img {
+    height: 7vh;
+    width: 6vw;
+    border-radius: 2.5px;
+}
+
+.teamselector-item-stats-skeleton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 7vh;
+    width: 6vw;
+}
+
+.teamselector-item-stats-skeleton svg {
+    background-color: #e9e9e9;
+    border-radius: 50px;
+    padding: 10px;
+    color: #000000;
+    font-size: 2emw;
+}
+
+.teamselector-item-stats-percentage {
+    color: rgb(43, 182, 43);
+    font-weight: 560;
+}
+
+.teamselector-message {
+    width: 15vw;
+    height: 5vh;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    box-shadow: 0px 0px 2px rgb(255, 255, 255), 0px 0px 2px rgb(255, 255, 255);
+    margin-bottom: 1.5vh;
+}
+
+.teamselector-error, .teamselector-winner {
+    background-color: #181717;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #ffffff;
+    font-weight: 600;
+}

@@ -32,3 +32,11 @@ export interface Team {
     modified_date: Date;
     team_players: TeamPlayer[];
 }
+
+export interface MatchTeam {
+    id: number;
+    match_id: number;
+    team_id: number;
+    is_winner: boolean;
+    team: Team;
+}

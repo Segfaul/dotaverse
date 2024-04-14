@@ -15,6 +15,7 @@ class LogSchema(BaseModel):
     """
     created_at: datetime
     level: str
+    service: str
     message: str
 
     model_config = ConfigDict(from_attributes=True)

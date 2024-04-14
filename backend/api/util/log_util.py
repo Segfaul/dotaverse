@@ -36,11 +36,11 @@ async def parse_logs(**kwargs) -> Dict[int, Dict[str, Union[datetime.datetime, s
         match = re.match(r'\[(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2},\d{3}): (\S+)/(\S+)] (.*)', log)
         if match:
             timestamp_str, level_first_part, level_second_part, message = match.groups()
-            level = f"{level_first_part}/{level_second_part}"
             created_at = datetime.datetime.strptime(timestamp_str, "%Y-%m-%d %H:%M:%S,%f")
             log_entry = {
                 'created_at': created_at,
-                'level': level,
+                'level': level_first_part,
+                'service': level_second_part,
                 'message': message.strip()
             }
             parsed_logs[index] = log_entry
