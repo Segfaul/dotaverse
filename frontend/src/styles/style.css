@@ -212,9 +212,6 @@ li {
 }
 
 
-/* Home component */
-
-
 /* TeamSelector component */
 .teamselector {
     display: flex;
@@ -360,4 +357,23 @@ li {
     align-items: center;
     color: #ffffff;
     font-weight: 600;
+}
+
+
+/* ErrorPage component */
+.error-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    height: 70vh;
+}
+
+.error-page img {
+    height: 30vh;
+    width: 20vw;
+}
+
+.error-page p {
+    font-size: 1.5em;
 }
