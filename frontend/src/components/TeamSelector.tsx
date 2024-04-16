@@ -29,6 +29,9 @@ export const TeamSelection: React.FC = () => {
         if (previous_id !== null) {
           delete teamStats[previous_id];
         }
+        if (isNaN(teamId)) {
+          return;
+        }
         const response = await client.get(`/api/v1/team/${teamId}/stats`);
         console.log(response.data.team_players);
   

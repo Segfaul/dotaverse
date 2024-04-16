@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { FiHome, FiShield, FiUsers, FiUser, FiColumns, FiBook, FiSidebar, FiGithub, FiBookOpen } from "react-icons/fi";
 
+import LanguageSelector from './LanguageSelector';
 import dotaverseLogo from '../assets/dotaverse_logo.webp';
 
 interface MenuItem {
@@ -88,21 +89,24 @@ const Header: React.FC = () => {
           ))}
         </ul>
       </nav>
-      <div className='credentials'>
-       <ul>
-        {credentials.map((item, index) => (
-          <li key={index}>
-            <Link to={item.link ? item.link: `/${item.name.toLowerCase()}`} target="_blank">
-                <span className='credential-item-icon'>{item.icon}</span>
-                {sidebarOpen && 
-                  <span className='credential-item-text'>
-                    {item.name}
-                  </span>
-                }
-            </Link>
-          </li>
-        ))}
-       </ul>
+      <div className='footer'>
+        <LanguageSelector />
+        <div className='credentials'>
+        <ul>
+          {credentials.map((item, index) => (
+            <li key={index}>
+              <Link to={item.link ? item.link: `/${item.name.toLowerCase()}`} target="_blank">
+                  <span className='credential-item-icon'>{item.icon}</span>
+                  {sidebarOpen && 
+                    <span className='credential-item-text'>
+                      {item.name}
+                    </span>
+                  }
+              </Link>
+            </li>
+          ))}
+        </ul>
+        </div>
       </div>
     </header>
   );

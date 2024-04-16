@@ -1,0 +1,9 @@
+{
+    "error": {
+        "404": {
+            "header": "Erreur 404 : Page non trouvée",
+            "description": "Malheureusement, la ressource demandée n'existe pas ou est en cours de développement"
+        }
+    }
+}
+  
