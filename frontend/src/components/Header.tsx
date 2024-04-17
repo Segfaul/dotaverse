@@ -18,7 +18,7 @@ const capitalize = (str: string) => {
 const Header: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
     const storedValue = sessionStorage.getItem('sidebarOpen');
-    return storedValue ? JSON.parse(storedValue) : true;
+    return storedValue ? JSON.parse(storedValue) : false;
   });
   const [chosenMenuItem, setChosenMenuItem] = useState<string>('');
   const location = useLocation();
@@ -46,6 +46,11 @@ const Header: React.FC = () => {
 
   const handleMenuItemClick = (itemName: string) => {
     setChosenMenuItem(itemName);
+    window.scrollTo({
+      top: 0,
+      left: 0,
+      behavior: 'auto',
+    });
   };
 
   const toggleSidebar = () => {

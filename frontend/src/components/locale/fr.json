@@ -4,6 +4,52 @@
             "header": "Erreur 404 : Page non trouvée",
             "description": "Malheureusement, la ressource demandée n'existe pas ou est en cours de développement"
         }
+    },
+    "teamselector": {
+        "status_200": "Vainqueur",
+        "status_500": "Erreur lors du calcul du match",
+        "status_400": "Veuillez sélectionner des héros et des statistiques d'équipe.",
+        "submit": "Obtenir le vainqueur",
+        "team": "Sélectionnez l'équipe",
+        "phc": "Sélectionnez PHC",
+        "player": "Joueur"
+      },
+    "home": {
+        "landing": {
+            "h3": "Découvrez le résultat des matchs professionnels de Dota 2.",
+            "p": "Dotaverse est un service web gratuit permettant de prédire les résultats des matchs professionnels de Dota 2 basé sur des statistiques ouvertes.",
+            "nav": [
+                "Essayer",
+                "Documentation API"
+            ]
+        },
+        "features": {
+            "h2": "Fonctionnalités",
+            "h3": "Explorez les principales fonctionnalités de notre service",
+            "p": "Découvrez le résultat des matchs professionnels de Dota 2 à l'aide d'un service basé sur l'espérance mathématique et les statistiques ouvertes des joueurs.",
+            "items": [
+                {
+                    "title": "Mises à jour régulières des données",
+                    "description": "Les données sont automatiquement mises à jour toutes les 30 minutes. Cela inclut les mises à jour sur les héros actuels, les joueurs professionnels et les équipes."
+                },
+                {
+                    "title": "API ouverte et gratuite",
+                    "description": "L'API ouverte de Dotaverse vous permet d'envoyer jusqu'à 45 requêtes par minute. Aucune restriction sur le nombre de requêtes par jour."
+                },
+                {
+                    "title": "Temps de réponse rapide aux requêtes entrantes",
+                    "description": "Le service assure un traitement rapide des requêtes avec un faible temps de mise en cache, ce qui permet de maintenir les ressources demandées à jour."
+                }
+            ]
+        },
+        "predict-match": {
+            "h2": "Prédire un match",
+            "p": "Sélectionnez des équipes professionnelles et des personnages correspondants dans la liste, et notre service déterminera un vainqueur parmi la paire."
+        },
+        "team-credential": {
+            "h2": "Équipe",
+            "h3": "Équipe de développement du projet"
+        }
     }
 }
   

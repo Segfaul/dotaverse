@@ -4,5 +4,51 @@
             "header": "Error 404: Page not found",
             "description": "Unfortunately, the requested resource does not exist or is under development"
         }
+    },
+    "teamselector": {
+        "status_200": "Winner",
+        "status_500": "Error calculating match",
+        "status_400": "Please select heroes and team stats.",
+        "submit": "GET Winner",
+        "team": "Select Team",
+        "phc": "Select PHC",
+        "player": "Player"
+    },
+    "home": {
+        "landing": {
+            "h3": "Find out the outcome of pro dota 2 matches.",
+            "p": "Dotaverse is a free web service for predicting Dota 2 pro match results based on open stats.",
+            "nav": [
+                "Try Out",
+                "APIDocs"
+            ]
+        },
+        "features": {
+            "h2": "Features",
+            "h3": "Explore our service main features",
+            "p": "Find out the outcome of a professional dota 2 match using a service backed by mathematical expectation and open player statistics.",
+            "items": [
+                {
+                  "title": "Regular Data Updates",
+                  "description": "The data is automatically updated every 30 minutes. This includes updates on current heroes, pro players and teams."
+                },
+                {
+                  "title": "Open Free API",
+                  "description": "The Dotaverse open API allows you to send up to 45 requests per minute. There are NO restrictions on the number of requests per day."
+                },
+                {
+                  "title": "Prompt Response Time to Incoming Requests",
+                  "description": "The service provides fast request processing with low caching time, which helps to keep the requested resources up-to-date."
+                }
+            ]
+        },
+        "predict-match": {
+            "h2": "Predict Match",
+            "p": "Select professional teams and corresponding characters from the list, and our service will draw a winner from the pair."
+        },
+        "team-credential": {
+            "h2": "Team",
+            "h3": "Project development team"
+        }
     }
 }
