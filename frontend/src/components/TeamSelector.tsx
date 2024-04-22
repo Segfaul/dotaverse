@@ -179,8 +179,8 @@ export const TeamRepresentation: React.FC<TeamRepresentationProps> = ({
             <li key={index}>
               {player.chosen_phc ? (
                 <img 
-                  src={`https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${player.chosen_phc.hero.opendota_name}.png`} 
-                  alt={player.chosen_phc.hero.opendota_name} 
+                  src={`https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/heroes/${player.chosen_phc.hero?.opendota_name}.png`} 
+                  alt={player.chosen_phc.hero?.opendota_name} 
                 />
               ) : (
                 <div className='teamselector-item-stats-skeleton'>
@@ -191,11 +191,11 @@ export const TeamRepresentation: React.FC<TeamRepresentationProps> = ({
               <select value={(player.chosen_phc?.hero_id) || 0} onChange={(e) => handleHeroChange(e, player.player.id, selectedTeam)}>
                 <option value={0}>{t('teamselector.phc')}</option>
                 {player.player.player_hero_chances
-                    .filter(phc => !Object.values(teamStats).flatMap(teamPlayers => teamPlayers.map(p => p.chosen_phc?.hero_id))
-                    .includes(phc.hero.id) || (player.chosen_phc && player.chosen_phc.hero_id === phc.hero.id))
+                    ?.filter(phc => !Object.values(teamStats).flatMap(teamPlayers => teamPlayers.map(p => p.chosen_phc?.hero_id))
+                    .includes(phc.hero?.id) || (player.chosen_phc && player.chosen_phc.hero_id === phc.hero?.id))
                     .map((phc) => (
-                        <option key={phc.id} value={phc.hero.id} phc-instance={JSON.stringify(phc)}>
-                          {phc.hero.opendota_name}
+                        <option key={phc.id} value={phc.hero?.id} phc-instance={JSON.stringify(phc)}>
+                          {phc.hero?.opendota_name}
                         </option>
                     ))
                 }

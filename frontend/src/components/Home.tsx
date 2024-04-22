@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
+import Navbar from './util/Navbar';
 import { TeamSelection } from './TeamSelector';
 import { FiArrowDownCircle, FiDatabase, FiCode, FiClock, FiPlay, FiBookOpen } from 'react-icons/fi';
 import { FaGithub, FaTelegram } from "react-icons/fa6";
@@ -28,7 +29,7 @@ interface CredentialTeamItem {
 const ArrowLink: React.FC<{ sectionId: string }> = ({ sectionId }) => {
   return (
     <div className='arrow-wrapper'>
-      <a href={'#'+ sectionId}>
+      <a href={`#${sectionId}`}>
         <FiArrowDownCircle />
       </a>
     </div>
@@ -38,6 +39,13 @@ const ArrowLink: React.FC<{ sectionId: string }> = ({ sectionId }) => {
 
 const Home: React.FC = () => {
   const { t } = useTranslation();
+
+  const sections = [
+    { id: 'landing', label: t('home.landing.h2')},
+    { id: 'features', label: t('home.features.h2') },
+    { id: 'predict-match', label: t('home.predict-match.h2') },
+    { id: 'team-credential', label: t('home.team-credential.h2') }
+  ];
 
   const featureitems: FeatureItem[] = [
     {
@@ -77,7 +85,8 @@ const Home: React.FC = () => {
 
   return (
     <div className='home'>
-      <section className='landing'>
+      <Navbar sections={sections} />
+      <section className='landing' id='landing'>
         <div className='landing-text'>
           <h1>Dotaverse</h1>
           <h3>"{t('home.landing.h3')}"</h3>

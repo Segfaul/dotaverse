@@ -1,5 +1,44 @@
 {
+    "search": {
+        "placeholders": {
+            "default": "Recherche",
+            "player": "Recherche par nom du joueur",
+            "hero": "Recherche par nom du héros",
+            "team": "Recherche par nom de l'équipe",
+            "log": "Recherche par niveau de journalisation ou service"
+        }
+    },
+    "header": {
+        "main-menu": [
+            {
+                "name": "À propos"
+            },
+            {
+                "name": "Héros"
+            },
+            {
+                "name": "Équipes"
+            },
+            {
+                "name": "Joueurs"
+            },
+            {
+                "name": "Matchs"
+            },
+            {
+                "name": "Journaux"
+            }
+        ]
+    },
     "error": {
+        "loading": {
+            "header": "Chargement",
+            "description": "Le contenu est en cours de chargement. Veuillez patienter."
+        },
+        "403": {
+            "header": "Erreur 403 : Interdit",
+            "description": "Malheureusement, vous n'avez pas la permission de consulter la ressource demandée"
+        },
         "404": {
             "header": "Erreur 404 : Page non trouvée",
             "description": "Malheureusement, la ressource demandée n'existe pas ou est en cours de développement"
@@ -16,6 +55,7 @@
       },
     "home": {
         "landing": {
+            "h2": "Principal",
             "h3": "Découvrez le résultat des matchs professionnels de Dota 2.",
             "p": "Dotaverse est un service web gratuit permettant de prédire les résultats des matchs professionnels de Dota 2 basé sur des statistiques ouvertes.",
             "nav": [
@@ -50,6 +90,64 @@
             "h2": "Équipe",
             "h3": "Équipe de développement du projet"
         }
+    },
+    "auth": {
+        "placeholders": {
+            "username": "nom d'utilisateur",
+            "password": "mot de passe"
+        },
+        "login": {
+            "name": "Connexion",
+            "status_404": "Nom d'utilisateur ou mot de passe incorrect"
+        }
+    },
+    "dashboard": {
+        "log": {
+            "h1": "Journaux"
+        }
+    },
+    "columns": {
+        "log": {
+            "level": "Niveau",
+            "service": "Service",
+            "message": "Message",
+            "date": "Date de création"
+        },
+        "team": {
+            "id": "Identifiant de l'équipe",
+            "name": "Nom de l'équipe",
+            "date": "Date de modification"
+        },
+        "hero": {
+            "id": "Identifiant du héros",
+            "name": "Nom du héros"
+        },
+        "player": {
+            "id": "Identifiant du joueur",
+            "name": "Nom du joueur",
+            "date": "Date de création"
+        },
+        "player_hero_chance": {
+            "win_percentage": "Pourcentage de victoire",
+            "date": "Date de modification"
+        },
+        "match": {
+            "id": "Identifiant du match",
+            "name": "Résultats du match",
+            "date": "Date du match"
+        }
+    },
+    "hero": {
+        "h1": "Héros"
+    },
+    "player": {
+        "h1": "Joueurs"
+    },
+    "match": {
+        "h1": "Matchs"
+    },
+    "team": {
+        "h1": "Équipes"
     }
 }
   

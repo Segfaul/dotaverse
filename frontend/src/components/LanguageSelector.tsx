@@ -8,13 +8,13 @@ type Language = {
 };
 
 const languages: Language[] = [
-  { code: 'en', name: 'English', flag: '🇺🇲' },
-  { code: 'fr', name: 'French', flag: '🇨🇵' },
-  { code: 'ru', name: 'Russian', flag: '🇷🇺' },
+  { code: 'en', name: 'English', flag: '\ud83c\uddfa\ud83c\uddf8' },
+  { code: 'fr', name: 'French', flag: '\ud83c\uddeb\ud83c\uddf7' },
+  { code: 'ru', name: 'Russian', flag: '\ud83c\uddf7\ud83c\uddfa' },
 ];
 
 const LanguageSelector: React.FC = () => {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const [activeLanguage, setActiveLanguage] = useState<string>('');
 
   useEffect(() => {
@@ -33,7 +33,6 @@ const LanguageSelector: React.FC = () => {
         value={activeLanguage}
         onChange={(e) => changeLanguage(e.target.value)}
       >
-        <option value="0">{t('Language')}</option>
         {languages.map((lang) => (
           <option key={lang.code} value={lang.code}>
             <span className='language-selector-item-flag'>{lang.flag}</span>

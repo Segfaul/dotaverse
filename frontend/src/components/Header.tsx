@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { FiHome, FiShield, FiUsers, FiUser, FiColumns, FiBook, FiSidebar, FiGithub, FiBookOpen } from "react-icons/fi";
+import { useTranslation } from 'react-i18next';
+import { FiFileText, FiHome, FiShield, FiUsers, FiUser, FiColumns, FiBook, FiSidebar, FiGithub, FiBookOpen } from "react-icons/fi";
 
 import LanguageSelector from './LanguageSelector';
+import { isAuthenticated } from './context/AuthContext';
 import dotaverseLogo from '../assets/dotaverse_logo.webp';
 
 interface MenuItem {
   name: string;
-  link: string | null;
+  link: string;
   icon: JSX.Element | null;
 }
 
-const capitalize = (str: string) => {
-  return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
 const Header: React.FC = () => {
+  const { t } = useTranslation();
+  const isAuth = isAuthenticated();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
     const storedValue = sessionStorage.getItem('sidebarOpen');
     return storedValue ? JSON.parse(storedValue) : false;
@@ -25,11 +25,12 @@ const Header: React.FC = () => {
 
   const title = 'Dotaverse';
   const menuItems: MenuItem[] = [
-    { name: 'About', link: '/', icon: <FiHome />},
-    { name: 'Heroes', link: null, icon: <FiShield /> },
-    { name: 'Teams', link: null, icon: <FiUsers /> },
-    { name: 'Players', link: null, icon: <FiUser /> },
-    { name: 'Matches', link: null, icon: <FiBook /> }
+    { name: t('header.main-menu.0.name'), link: '/', icon: <FiHome />},
+    { name: t('header.main-menu.1.name'), link: '/heroes', icon: <FiShield /> },
+    { name: t('header.main-menu.2.name'), link: '/teams', icon: <FiUsers /> },
+    { name: t('header.main-menu.3.name'), link: '/players', icon: <FiUser /> },
+    { name: t('header.main-menu.4.name'), link: '/matches', icon: <FiBook /> },
+    ...(isAuth ? [{ name: t('header.main-menu.5.name'), link: "/logs", icon: <FiFileText /> }] : [])
   ];
 
   const credentials: MenuItem[] = [
@@ -40,7 +41,7 @@ const Header: React.FC = () => {
   useEffect(() => {
     const path = location.pathname;
     const parts = path.split('/');
-    const menuItemName = parts[1] ? capitalize(parts[1]) : 'About';
+    const menuItemName = parts[1] ? `/${parts[1]}` : '/';
     setChosenMenuItem(menuItemName);
   }, [location.pathname]);
 
@@ -81,8 +82,8 @@ const Header: React.FC = () => {
       <nav className="main-menu">
         <ul>
           {menuItems.map((item, index) => (
-            <li key={index} className={chosenMenuItem === item.name ? 'chosen-menu-item' : ''}>
-              <Link to={item.link ? item.link: `/${item.name.toLowerCase()}`} onClick={() => handleMenuItemClick(item.name)}>
+            <li key={index} className={chosenMenuItem === item.link ? 'chosen-menu-item' : ''}>
+              <Link to={item.link ? item.link: `/${item.name.toLowerCase()}`} onClick={() => handleMenuItemClick(item.link)}>
                 <span className='menu-item-icon'>{item.icon}</span>
                 {sidebarOpen && 
                   <span className='menu-item-text'>

@@ -15,8 +15,8 @@ from backend.api.schema import UserResponse
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 ALGORITHM = "HS256"
-# 24 hours before expiration
-ACCESS_TOKEN_EXPIRE_MINUTES=60*24
+# 15 minutes before expiration
+ACCESS_TOKEN_EXPIRE_MINUTES=15
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/user/token")
 

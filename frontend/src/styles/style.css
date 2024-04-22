@@ -1,10 +1,27 @@
 body {
     display: block;
+    background: linear-gradient(-40deg, #242424, #1a1a1a);
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Droid Sans", Ubuntu, Cantarell, "Fira Sans", Helvetica, Arial, sans-serif;
 }
 
 html{
-    scroll-behavior:smooth
+    scroll-behavior:smooth;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #000000;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #aaa9a9;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #555;
 }
 
 #root {
@@ -103,10 +120,10 @@ header {
     max-width: 50vw;
     min-width: 10vw;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
     top: 0;
     left: 0;
-    background-color: #202020ee;
+    background-color: #191919ee;
     overflow-x: hidden;
     display: flex;
     flex-direction: column;
@@ -202,7 +219,7 @@ li {
     color: #fff;
     border: none;
     cursor: pointer;
-    z-index: 2;
+    z-index: 3;
     height: 1.5em;
 }
 
@@ -240,7 +257,7 @@ li {
 }
 
 .chosen-menu-item {
-    background-color: rgb(31, 30, 30);
+    background-color: rgb(28, 28, 28);
     transition-duration: 0.1s;
 }
 
@@ -297,6 +314,48 @@ li {
 
 .closed .credentials ul {
     flex-wrap: wrap;
+}
+
+
+/* Navbar component */
+.navbar-menu {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+    z-index: 1;
+    transition: top 0.3s ease-in-out;
+}
+  
+.fixed {
+    position: fixed;
+    top: 0;
+}
+  
+.navbar-menu-items {
+    list-style-type: none;
+    padding: .3em 2.5em;
+    background-color: rgb(4, 5, 1);
+    border-radius: 0 0 10em 10em;
+    margin: 0;
+    display: flex;
+    gap: .7em;
+}
+
+.navbar-menu-item-link {
+    font-size: 1.05em;
+    text-decoration: none;
+    color: #a7a7a7;
+    padding: 5px;
+    display: block;
+    transition: color .3s ease-in-out;
+}
+
+.navbar-menu-item-link:hover {
+    color: #e0e0e0;
 }
 
 
@@ -448,6 +507,7 @@ li {
     align-items: center;
     color: #ffffff;
     font-weight: 600;
+    animation: fadeInAnimation .3s ease-in forwards;
 }
 
 
@@ -490,7 +550,7 @@ li {
     font-size: 1em;
     border-radius: 5px;
     border: none;
-    background-color: #2b2a2aee;
+    background-color: #1f1f1fee;
     color: #e5e2e2;
 }
 
@@ -542,6 +602,7 @@ section {
 }
 
 .landing-img {
+    pointer-events: none;
     display: flex;
     height: 100vh;
     align-items: flex-end;
@@ -759,6 +820,7 @@ section {
 }
 
 .team-credential-item img {
+    pointer-events: none;
     height: 8em;
     border-radius: 50em;
 }
@@ -796,4 +858,406 @@ section {
 
 .team-credential-item-credentials a svg {
     font-size: 1.2em;
+}
+
+
+/* Table component */
+.table-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: start;
+    min-height: 100vh;
+    width: 100%;
+}
+
+.table {
+    width: 50%;
+    border-collapse: collapse;
+}
+
+.table-list-item {
+    background-color: #1a1a1a;
+}
+
+.table-list-item a {
+    display: flex;
+    color: #7a7a7a;
+    justify-content: center;
+    align-items: center;
+    padding: 1em;
+    text-transform: capitalize;
+    transition: color .3s ease-in-out;
+}
+
+.table-list-item a:hover {
+    color: #d1d0d0;
+}
+
+.table th {
+    background-color: #202020;
+    padding: 1em 0;
+    border-bottom: 1px solid #fff;
+    cursor: pointer;
+}
+
+.table td:first-child, .table th:first-child{
+    width: 10%;
+}
+
+.table td {
+    box-shadow: 0px -0.6px 0px rgb(61, 61, 61);
+}
+
+
+/* Heroes component */
+.search-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 50%;
+    margin-bottom: 2em;
+    background-color: #000000;
+    border-radius: 5px;
+}
+
+.search-container input {
+    font-size: 1em;
+    width: 100%;
+    padding: .5em 1em;
+    background: none;
+    border: none;
+    outline: none;
+}
+
+.search-container svg {
+    font-size: 1.5em;
+    padding: .5em;
+    color: #ffffff44;
+}
+
+.heroes-list, .heroes-list-items {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeInAnimation .2s forwards;
+}
+
+.heroes-list-item-data {
+    display: flex;
+    align-items: center;
+    gap: 2em;
+    width: 16.5em;
+}
+
+.heroes-list-item-pic {
+    pointer-events: none;
+    height: 2em;
+    border-radius: 200em;
+}
+
+
+/* NavTab component */
+.tab-component {
+    display: flex;
+    position: relative;
+    width: 100%;
+    flex-direction: column;
+}
+  
+.tab-buttons {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 10px;
+    padding: 20px 0px 0px 0px;
+    position: relative;
+    background-color: #181818;
+    flex-wrap: wrap;
+    gap: 1em;
+    box-shadow: 0px 0.6px 0px rgb(61, 61, 61);
+}
+
+.tab-buttons button {
+    border: none;
+    text-transform: uppercase;
+    cursor: pointer;
+    background-color: transparent;
+    padding: 10px 20px;
+    font-size: 1em;
+    outline: none;
+    transition: box-shadow .15s ease-in-out;
+}
+
+.tab-buttons button.active {
+    box-shadow: 0 8px .5px -6px rgb(122, 8, 8);
+}
+
+.tab-content .inactive {
+    display: none;
+}
+
+.tab-content .active {
+    display: block;
+}
+
+
+/* Hero component */
+.hero-stats {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 3em;
+}
+
+.hero-stats-intro {
+    display: flex;
+    position: relative;
+    justify-content: left;
+    align-items: center;
+    gap: 1em;
+    width: 47.5%;
+    padding: 2em;
+    margin-bottom: 2em;
+    z-index: 1;
+}
+
+.hero-background-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    filter: blur(12px);
+    z-index: -1;
+}
+
+.hero-stats-intro h1 {
+    text-transform: capitalize;
+}
+
+.heroes-stats-pic {
+    pointer-events: none;
+    height: 8em;
+    border-radius: 2em;
+}
+
+.hero-win-percentage-container, .hero-win-percentage {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.hero-win-percentage {
+    padding: 1em;
+    align-items: first baseline;
+}
+
+.hero-player-list-item-data {
+    width: 6.25em;
+}
+
+.hero-win-percentage span {
+    font-size: 1em;
+}
+
+.progress-bar {
+    width: 100px;
+    height: .3em;
+    background-color: grey;
+    border-radius: 10px;
+    position: relative;
+}
+
+.progress-bar-fill {
+    height: 100%;
+    border-radius: 10px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    transition: width 0.3s ease;
+}
+
+.hero-stats-players, .hero-stats-matches {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.hero-match-list-item-data {
+    width: 25em;
+    display: flex;
+    margin-left: 10em;
+}
+
+.hero-match-date {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-match-date span {
+    display: flex;
+    align-items: center;
+    justify-content: first baseline;
+    width: 12em;
+}
+
+.hero-stats-matches .table td:nth-child(2), .table th:nth-child(2) {
+    width: 65%;
+}
+
+.hero-match-list-item-data-matchteam {
+    transition: color .1s ease-in-out;
+}
+
+.winner {
+    color: rgb(7, 110, 7);
+    transition: color .3s ease-in-out;
+}
+
+.table-list-item a:hover .hero-match-list-item-data-matchteam {
+    color: rgb(177, 8, 8);
+}
+
+.table-list-item a:hover .winner {
+    color: rgb(76, 181, 81);
+}
+
+
+/* Teams Component */
+.team-list-item-data {
+    width: 10em;
+    margin-left: 4.2em;
+}
+
+.team-background-overlay {
+    background-position: center 28%;
+    background-image: url('https://cdn.cloudflare.steamstatic.com/apps/dota2/images//aegis/bg_01.jpg');
+}
+
+
+/* Player Component */
+.player-background-overlay {
+    filter: blur(4.5px);
+    background-image: url('https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/international2023/blue_gradient_soft_aegis.jpg');
+}
+
+.player-stats-heroes-table td:nth-child(3), .player-stats-heroes-table th:nth-child(3) {
+    width: 30%;
+}
+
+.player-stats-heroes-table td:nth-child(2), .player-stats-heroes-table th:nth-child(2) {
+    width: 40%;
+}
+
+.player-stats-matches-table td:nth-child(3), .player-stats-matches-table th:nth-child(3) {
+    width: 30%;
+}
+
+.player-stats-matches-table td:nth-child(3), .player-stats-matches-table th:nth-child(3)  {
+    width: 70%;
+}
+
+
+/* Match Component */
+.match-background-overlay {
+    filter: blur(4.5px);
+    background-image: url('https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/international2023/cathedral_floor.jpg');
+}
+
+.match-stats-player-table {
+    min-height: 35vh;
+}
+
+.match-stats-player-table td:nth-child(2), .match-stats-player-table th:nth-child(2) {
+    width: 30%;
+}
+
+.match-stats-player-table td:nth-child(3), .match-stats-player-table th:nth-child(3) {
+    width: 25%;
+}
+
+.match-stats-player-table td:nth-child(4), .match-stats-player-table th:nth-child(4) {
+    width: 15%;
+}
+
+.match-list-item-data {
+    width: 10em;
+    margin-left: 3.5em;
+}
+
+.match-stats-team {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    align-items: center;
+    width: 100%;
+}
+
+.match-stats-team-name {
+    padding: .5em 2em;
+    font-size: 1.2em;
+    font-weight: 540;
+    background-color: #202020;
+    border-radius: .5em .5em 0 0;
+}
+
+.match-stat-team-link {
+    color: #7a7a7a;
+    transition: color .3s ease-in-out;
+}
+
+.match-stat-team-link:hover {
+    color: #d1d0d0;
+}
+
+
+/* Admin component */
+.admin-auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
+    align-items: center;
+    margin-bottom: 3em;
+}
+
+.admin-auth-form-submit {
+    outline: none;
+    padding: .8em 4em;
+}
+
+.admin-auth-form-submit:focus {
+    outline: none;
+}
+
+.admin-auth-form-el input {
+    font-size: 1.2em;
+    outline: none;
+    border: none;
+    padding: .7em 1em;
+    background-color: #1b1b1b;
+}
+
+
+/* Logs component */
+
+.logs-table td:nth-child(2), .logs-table th:nth-child(2) {
+    width: 25%;
+}
+
+.logs-table td:nth-child(3), .logs-table th:nth-child(3) {
+    width: 47%;
+}
+
+.logs-table .table-list-item td{
+    padding: 1em 0;
 }
