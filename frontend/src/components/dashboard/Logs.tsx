@@ -17,6 +17,10 @@ const Logs: React.FC = () => {
     fetchLogs();
   }, []);
 
+  useEffect(() => {
+    document.title = t('header.main-menu.5.name') + " - Dotaverse";
+  }, [t]);
+
   const fetchLogs = async () => {
     try {
       const response = await client.get('/api/v1/log/', {headers: {'Authorization': `Bearer ${localStorage.getItem('access_token')}`}});

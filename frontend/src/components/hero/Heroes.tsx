@@ -15,6 +15,10 @@ const Heroes: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState<string>('');
 
   useEffect(() => {
+    document.title = t('header.main-menu.1.name') + " - Dotaverse";
+  }, [t]);
+
+  useEffect(() => {
     fetchHeroes();
   }, []);
 

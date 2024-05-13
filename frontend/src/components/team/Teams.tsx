@@ -18,6 +18,10 @@ const Teams: React.FC = () => {
     fetchTeams();
   }, []);
 
+  useEffect(() => {
+    document.title = t('header.main-menu.2.name') + " - Dotaverse";
+  }, [t]);
+
   const fetchTeams = async () => {
     try {
       const response = await client.get('/api/v1/team/');

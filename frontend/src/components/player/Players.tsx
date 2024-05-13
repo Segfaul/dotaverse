@@ -17,6 +17,10 @@ const Players: React.FC = () => {
   useEffect(() => {
     fetchPlayers();
   }, []);
+  
+  useEffect(() => {
+    document.title = t('header.main-menu.3.name') + " - Dotaverse";
+  }, [t]);
 
   const fetchPlayers = async () => {
     try {

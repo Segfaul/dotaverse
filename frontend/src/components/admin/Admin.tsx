@@ -23,6 +23,10 @@ const Admin: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    document.title = t('auth.login.name') + " - Dotaverse";
+  }, [t]);
+
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 

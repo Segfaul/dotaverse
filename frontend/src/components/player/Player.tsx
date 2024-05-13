@@ -8,6 +8,7 @@ import PageLoading from '../error/PageLoading';
 import Table, { Column } from '../util/Table';
 import SearchBar from '../util/SearchBar';
 import NavTab, { NavTab as NavTabSchema } from '../util/NavTab';
+import { capitalize } from '../util/TextTransform';
 
 
 const Player: React.FC = () => {
@@ -25,6 +26,10 @@ const Player: React.FC = () => {
   useEffect(() => {
     fetchPlayer(Number(id));
   }, [id]);
+
+  useEffect(() => {
+    document.title = `${capitalize(player?.name)} - ${t('header.main-menu.3.name')} - Dotaverse`;
+  }, [player, t]);
 
   const fetchPlayer = async (player_id: number) => {
     try {

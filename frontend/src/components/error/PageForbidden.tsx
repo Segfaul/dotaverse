@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import ForbiddenWebp from '../../assets/403_web.webp'
@@ -6,6 +6,10 @@ import ForbiddenWebp from '../../assets/403_web.webp'
 
 const PageForbidden: React.FC = () => {
   const { t } = useTranslation();
+
+  useEffect(() => {
+    document.title = t('error.403.header') + " - Dotaverse";
+  }, [t]);
 
   return (
     <div className='error-page'>

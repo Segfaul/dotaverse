@@ -18,6 +18,10 @@ const Matches: React.FC = () => {
     fetchMatches();
   }, []);
 
+  useEffect(() => {
+    document.title = t('header.main-menu.4.name') + " - Dotaverse";
+  }, [t]);
+
   const fetchMatches = async () => {
     try {
       const response = await client.get('/api/v1/match/');

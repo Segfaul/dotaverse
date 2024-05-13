@@ -20,6 +20,10 @@ const Match: React.FC = () => {
     fetchMatch(Number(id));
   }, [id]);
 
+  useEffect(() => {
+    document.title = `№${match?.id} - ${t('header.main-menu.4.name')} - Dotaverse`;
+  }, [match, t]);
+
   const fetchMatch = async (match_id: number) => {
     try {
       const response = await client.get(`/api/v1/match/${match_id}/stats`);
