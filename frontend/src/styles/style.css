@@ -561,6 +561,7 @@ li {
 .language-selector__select:active {
     border: none;
 }
+
 .language-selector__select:focus {
     outline: none;
     border: none;

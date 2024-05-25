@@ -60,7 +60,7 @@
             "p": "Dotaverse est un service web gratuit permettant de prédire les résultats des matchs professionnels de Dota 2 basé sur des statistiques ouvertes.",
             "nav": [
                 "Essayer",
-                "Documentation API"
+                "API Docs"
             ]
         },
         "features": {

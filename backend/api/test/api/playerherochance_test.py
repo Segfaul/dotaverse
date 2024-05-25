@@ -28,8 +28,12 @@ pytestmark = pytest.mark.anyio
         ),
     ),
 )
-async def test_add_playerherochance(client: AsyncClient, payload: dict, status_code: int):
-    response = await client.post("/playerherochance/", json=payload)
+async def test_add_playerherochance(
+    client: AsyncClient, admin_token: str,
+    payload: dict, status_code: int
+):
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await client.post("/playerherochance/", json=payload, headers=headers)
     assert response.status_code == status_code
     if status_code == status.HTTP_201_CREATED:
         assert payload["win_percentage"] == response.json()["win_percentage"]
@@ -69,7 +73,10 @@ async def test_add_playerherochance(client: AsyncClient, payload: dict, status_c
         ),
     ),
 )
-async def test_get_playeherochance(client: AsyncClient, playerherochance_id: Optional[int], params: dict, status_code: int):
+async def test_get_playeherochance(
+    client: AsyncClient,
+    playerherochance_id: Optional[int], params: dict, status_code: int
+):
     response = await client.get(
         f"/playerherochance/{playerherochance_id if playerherochance_id else ''}",
         params=params
@@ -106,8 +113,14 @@ async def test_get_playeherochance(client: AsyncClient, playerherochance_id: Opt
         ),
     ),
 )
-async def test_upd_playeherochance(client: AsyncClient, playerherochance_id: Optional[int], payload: dict, status_code: int):
-    response = await client.patch(f"/playerherochance/{playerherochance_id}", json=payload)
+async def test_upd_playeherochance(
+    client: AsyncClient, admin_token: str,
+    playerherochance_id: Optional[int], payload: dict, status_code: int
+):
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await client.patch(
+        f"/playerherochance/{playerherochance_id}", json=payload, headers=headers
+    )
     assert response.status_code == status_code
 
 
@@ -124,6 +137,10 @@ async def test_upd_playeherochance(client: AsyncClient, playerherochance_id: Opt
         )
     ),
 )
-async def test_delete_team(client: AsyncClient, playerherochance_id: Optional[int], status_code: int):
-    response = await client.delete(f"/playerherochance/{playerherochance_id}")
+async def test_delete_team(
+    client: AsyncClient, admin_token: str,
+    playerherochance_id: Optional[int], status_code: int
+):
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await client.delete(f"/playerherochance/{playerherochance_id}", headers=headers)
     assert response.status_code == status_code

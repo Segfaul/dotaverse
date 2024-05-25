@@ -40,8 +40,12 @@ pytestmark = pytest.mark.anyio
         ),
     ),
 )
-async def test_add_team(client: AsyncClient, payload: dict, status_code: int):
-    response = await client.post("/team/", json=payload)
+async def test_add_team(
+    client: AsyncClient, admin_token: str,
+    payload: dict, status_code: int
+):
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await client.post("/team/", json=payload, headers=headers)
     assert response.status_code == status_code
     if status_code == status.HTTP_201_CREATED:
         assert payload["name"] == response.json()["name"]
@@ -100,7 +104,10 @@ async def test_add_team(client: AsyncClient, payload: dict, status_code: int):
         ),
     ),
 )
-async def test_get_team(client: AsyncClient, team_id: Optional[int], stats: Optional[bool], params: dict, status_code: int):
+async def test_get_team(
+    client: AsyncClient,
+    team_id: Optional[int], stats: Optional[bool], params: dict, status_code: int
+):
     response = await client.get(
         f"/team/{team_id if team_id else ''}{'/stats' if stats else ''}",
         params=params
@@ -137,8 +144,12 @@ async def test_get_team(client: AsyncClient, team_id: Optional[int], stats: Opti
         ),
     ),
 )
-async def test_upd_team(client: AsyncClient, team_id: Optional[int], payload: dict, status_code: int):
-    response = await client.patch(f"/team/{team_id}", json=payload)
+async def test_upd_team(
+    client: AsyncClient, admin_token: str,
+    team_id: Optional[int], payload: dict, status_code: int
+):
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await client.patch(f"/team/{team_id}", json=payload, headers=headers)
     assert response.status_code == status_code
 
 
@@ -155,6 +166,10 @@ async def test_upd_team(client: AsyncClient, team_id: Optional[int], payload: di
         )
     ),
 )
-async def test_delete_team(client: AsyncClient, team_id: Optional[int], status_code: int):
-    response = await client.delete(f"/team/{team_id}")
+async def test_delete_team(
+    client: AsyncClient, admin_token: str,
+    team_id: Optional[int], status_code: int
+):
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await client.delete(f"/team/{team_id}", headers=headers)
     assert response.status_code == status_code

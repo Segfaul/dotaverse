@@ -47,7 +47,7 @@ def log(logger):
                     logger.info("%s", func_name)
 
             return wrapper
-        
+
         else:
             def wrapper(*args, **kwargs):
 

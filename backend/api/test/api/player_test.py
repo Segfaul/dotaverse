@@ -44,8 +44,12 @@ pytestmark = pytest.mark.anyio
         ),
     ),
 )
-async def test_add_player(client: AsyncClient, payload: dict, status_code: int):
-    response = await client.post("/player/", json=payload)
+async def test_add_player(
+    client: AsyncClient, admin_token: str,
+    payload: dict, status_code: int
+):
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await client.post("/player/", json=payload, headers=headers)
     assert response.status_code == status_code
     if status_code == status.HTTP_201_CREATED:
         assert payload["name"] == response.json()["name"]
@@ -106,7 +110,10 @@ async def test_add_player(client: AsyncClient, payload: dict, status_code: int):
         ),
     ),
 )
-async def test_get_player(client: AsyncClient, player_id: Optional[int], stats: Optional[bool], params: dict, status_code: int):
+async def test_get_player(
+    client: AsyncClient,
+    player_id: Optional[int], stats: Optional[bool], params: dict, status_code: int
+):
     response = await client.get(
         f"/player/{player_id if player_id else ''}{'/stats' if stats else ''}",
         params=params
@@ -143,8 +150,12 @@ async def test_get_player(client: AsyncClient, player_id: Optional[int], stats: 
         ),
     ),
 )
-async def test_upd_player(client: AsyncClient, player_id: Optional[int], payload: dict, status_code: int):
-    response = await client.patch(f"/player/{player_id}", json=payload)
+async def test_upd_player(
+    client: AsyncClient, admin_token: str,
+    player_id: Optional[int], payload: dict, status_code: int
+):
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await client.patch(f"/player/{player_id}", json=payload, headers=headers)
     assert response.status_code == status_code
 
 
@@ -161,6 +172,10 @@ async def test_upd_player(client: AsyncClient, player_id: Optional[int], payload
         )
     ),
 )
-async def test_delete_player(client: AsyncClient, player_id: Optional[int], status_code: int):
-    response = await client.delete(f"/player/{player_id}")
+async def test_delete_player(
+    client: AsyncClient, admin_token: str,
+    player_id: Optional[int],status_code: int
+):
+    headers = {"Authorization": f"Bearer {admin_token}"}
+    response = await client.delete(f"/player/{player_id}", headers=headers)
     assert response.status_code == status_code

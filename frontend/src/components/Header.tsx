@@ -18,7 +18,7 @@ const Header: React.FC = () => {
   const isAuth = isAuthenticated();
   const [sidebarOpen, setSidebarOpen] = useState<boolean>(() => {
     const storedValue = sessionStorage.getItem('sidebarOpen');
-    return storedValue ? JSON.parse(storedValue) : false;
+    return storedValue ? JSON.parse(storedValue) : (window.innerWidth < 1132 ? true : false);
   });
   const [chosenMenuItem, setChosenMenuItem] = useState<string>('');
   const location = useLocation();
