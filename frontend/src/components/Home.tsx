@@ -100,7 +100,7 @@ const Home: React.FC = () => {
               <span className="landing-nav-text">{t('home.landing.nav.0')}</span>
               <span className="landing-nav-icon"><FiPlay /></span>
             </a>
-            <Link to={'api/redoc'}>
+            <Link reloadDocument to={'/api/redoc'}>
               <span className="landing-nav-text">{t('home.landing.nav.1')}</span>
               <span className="landing-nav-icon"><FiBookOpen /></span>
             </Link>

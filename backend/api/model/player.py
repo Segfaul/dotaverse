@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, List
 
-from sqlalchemy import Integer, String, DateTime, func
+from sqlalchemy import BigInteger, String, DateTime, func
 from sqlalchemy.orm import Mapped, relationship, mapped_column, validates
 
 from backend.api.validator import validate_link
@@ -38,7 +38,7 @@ class Player(Base, CRUDMixin):
         "id", autoincrement=True, nullable=False, unique=True, primary_key=True
     )
     name: Mapped[str] = mapped_column("name", String(length=32), nullable=False)
-    steamid: Mapped[int] = mapped_column("steamid", Integer(), nullable=False, unique=True)
+    steamid: Mapped[int] = mapped_column("steamid", BigInteger, nullable=False, unique=True)
     opendota_link: Mapped[str] = mapped_column(
         "opendota_link", String(length=128), nullable=False, unique=True
     )

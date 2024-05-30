@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next';
 
 import client from './config/client';
 import {PlayerHeroChance, Team, TeamPlayer, MatchTeam} from './config/types'
+import { truncateText } from './util/TextTransform';
 
 
 export const TeamSelection: React.FC = () => {
@@ -201,7 +202,7 @@ export const TeamRepresentation: React.FC<TeamRepresentationProps> = ({
                 }
             </select>
             {player.chosen_phc ? (
-                <span className='teamselector-item-stats-percentage'>{player.chosen_phc.win_percentage} %</span>
+                <span className='teamselector-item-stats-percentage'>{truncateText(player.chosen_phc.win_percentage.toString(), 5, '')} %</span>
               ) : (
                 <span className='teamselector-item-stats-percentage'>~ %</span>
             )}

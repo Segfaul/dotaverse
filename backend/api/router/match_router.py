@@ -154,7 +154,7 @@ async def calculate_match(
     match_players: List[MatchPlayer.__dict__] = []
     for team_id, players in teams.items():
         match_team = await MatchTeam.create(
-            db_session, team_id=team_id, match_id=match.id, is_winner=(team_id==winner_id)
+            db_session, team_id=int(team_id), match_id=match.id, is_winner=(team_id==winner_id)
         )
         player_data: List[MatchPlayer.__dict__] = [
             MatchPlayer(

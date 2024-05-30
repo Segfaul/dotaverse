@@ -2,6 +2,8 @@ import re
 import datetime
 from typing import Dict, Union
 
+from backend.config import LOG_FILE_PATH
+
 
 async def parse_logs(**kwargs) -> Dict[int, Dict[str, Union[datetime.datetime, str]]]:
     """
@@ -25,7 +27,7 @@ async def parse_logs(**kwargs) -> Dict[int, Dict[str, Union[datetime.datetime, s
         ]
     ```
     """
-    with open('dotaverse.log', 'r', encoding='utf-8') as file:
+    with open(LOG_FILE_PATH, 'r', encoding='utf-8') as file:
         logs = file.readlines()
 
     parsed_logs = {}

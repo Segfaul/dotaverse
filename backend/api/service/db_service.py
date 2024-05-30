@@ -13,7 +13,7 @@ POSTGRE_CON = f"postgresql+asyncpg://{env('POSTGRES_USER')}:{env('POSTGRES_PASSW
               f"@{env('POSTGRES_HOST')}:{env('POSTGRES_PORT')}/{env('POSTGRES_DB')}"
 
 async_engine = create_async_engine(
-    f'sqlite+aiosqlite:///{"test" if TEST else "dotaverse"}.db' if DEBUG else POSTGRE_CON,
+    f'sqlite+aiosqlite:///{"test" if TEST else "dotaverse"}.db' if (DEBUG or TEST) else POSTGRE_CON,
     pool_pre_ping=True,
     echo=False,
 )

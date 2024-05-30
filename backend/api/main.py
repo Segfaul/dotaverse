@@ -9,7 +9,7 @@ from fastapi.openapi.docs import get_swagger_ui_html, get_redoc_html
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
-from backend.config import limiter
+from backend.config import limiter, ALLOWED_ORIGINS
 from backend.api.router import hero_router, log_router, \
     match_router, matchplayer_router, matchteam_router, \
     player_router, playerherochance_router, \
@@ -79,6 +79,7 @@ app = FastAPI(
         "name": "Segfaul",
         "url": "https://github.com/segfaul",
     },
+    openapi_url='/api/openapi.json',
     openapi_tags=tags_metadata,
     docs_url=None, redoc_url=None,
     lifespan=lifespan
@@ -87,14 +88,9 @@ app = FastAPI(
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
-origins = [
-    "http://localhost:3000",
-    "http://127.0.0.1:3000"
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"]
@@ -136,7 +132,7 @@ async def timeout_middleware(request: Request, call_next):
 @app.get("/api/swagger", include_in_schema=False)
 def overridden_swagger():
     return get_swagger_ui_html(
-        openapi_url="/openapi.json", title="DotaverseAPI",
+        openapi_url="/api/openapi.json", title="DotaverseAPI",
         swagger_favicon_url="https://i.postimg.cc/3RqsMjMv/logo.png"
     )
 
@@ -144,6 +140,6 @@ def overridden_swagger():
 @app.get("/api/redoc", include_in_schema=False)
 def overridden_redoc():
     return get_redoc_html(
-        openapi_url="/openapi.json", title="DotaverseAPI",
+        openapi_url="/api/openapi.json", title="DotaverseAPI",
         redoc_favicon_url="https://i.postimg.cc/3RqsMjMv/logo.png"
     )

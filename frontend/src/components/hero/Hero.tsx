@@ -8,7 +8,7 @@ import PageLoading from '../error/PageLoading';
 import Table, { Column } from '../util/Table';
 import SearchBar from '../util/SearchBar';
 import NavTab, { NavTab as NavTabSchema } from '../util/NavTab';
-import { capitalize } from '../util/TextTransform';
+import { capitalize, truncateText } from '../util/TextTransform';
 
 
 const Hero: React.FC = () => {
@@ -94,7 +94,7 @@ const Hero: React.FC = () => {
       return (
         <div className='hero-win-percentage-container'>
           <div className='hero-win-percentage'>
-            <span>{row.win_percentage}%</span>
+            <span>{truncateText(row.win_percentage.toString(), 5, '')}%</span>
             <div className='progress-bar'>
               <div className='progress-bar-fill' style={{ width: `${row.win_percentage}%`, backgroundColor: barColor }}/>
             </div>

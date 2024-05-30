@@ -6,6 +6,7 @@ import client from '../config/client';
 import { Match as MatchSchema, MatchPlayer } from '../config/types';
 import PageLoading from '../error/PageLoading';
 import Table, { Column } from '../util/Table';
+import { truncateText } from '../util/TextTransform';
 
 
 const Match: React.FC = () => {
@@ -80,7 +81,7 @@ const Match: React.FC = () => {
       return (
         <div className='hero-win-percentage-container'>
           <div className='hero-win-percentage'>
-            <span>{row.player_hero_chance.win_percentage}%</span>
+            <span>{truncateText(row.player_hero_chance.win_percentage.toString(), 5, '')}%</span>
             <div className='progress-bar'>
               <div className='progress-bar-fill' style={{ width: `${row.player_hero_chance.win_percentage}%`, backgroundColor: barColor }}/>
             </div>

@@ -70,7 +70,7 @@ async def populate_db_from_opendota():
                     opendota_link=f'https://www.opendota.com/players/{player["account_id"]}'
                 )
                 team_player_instance = await get_or_create(
-                    session, TeamPlayer, player_id=player_instance.id, is_active=1,
+                    session, TeamPlayer, player_id=player_instance.id, is_active=True,
                     team_id=team_instance.id
                 )
                 player_hero_chances: List[PlayerHeroChance] = []

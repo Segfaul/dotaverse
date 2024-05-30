@@ -37,6 +37,11 @@ coverage/
 # production
 build/
 
+# docker data volumes
+postgres-data/
+logs-data/
+certbot/
+
 # misc
 .DS_Store
 .env.local

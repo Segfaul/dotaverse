@@ -1,6 +1,6 @@
 from typing import TYPE_CHECKING, List
 
-from sqlalchemy import DateTime, func
+from sqlalchemy import BigInteger, DateTime, func
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.api.model.base import Base

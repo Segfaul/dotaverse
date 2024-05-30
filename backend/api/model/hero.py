@@ -1,9 +1,8 @@
 from typing import TYPE_CHECKING, List
 
 from sqlalchemy import String
-from sqlalchemy.orm import Mapped, relationship, mapped_column, validates
+from sqlalchemy.orm import Mapped, relationship, mapped_column
 
-from backend.api.validator import validate_link
 from backend.api.model.base import Base
 from backend.api.model.mixin import CRUDMixin
 

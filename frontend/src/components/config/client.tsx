@@ -4,8 +4,10 @@ axios.defaults.xsrfCookieName = 'csrftoken';
 axios.defaults.xsrfHeaderName = 'X-CSRFToken';
 axios.defaults.withCredentials = true;
 
+const backend_url = import.meta.env.VITE_BACKEND_URL;
+
 const client = axios.create({
-  baseURL: 'http://127.0.0.1:8000',
+  baseURL: backend_url,
   withCredentials: true,
 });
 

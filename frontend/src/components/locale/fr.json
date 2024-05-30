@@ -83,7 +83,7 @@
             ]
         },
         "predict-match": {
-            "h2": "Prédire un match",
+            "h2": "Calculer",
             "p": "Sélectionnez des équipes professionnelles et des personnages correspondants dans la liste, et notre service déterminera un vainqueur parmi la paire."
         },
         "team-credential": {
