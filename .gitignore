@@ -5,6 +5,8 @@ __pycache__/
 *$py.class
 
 # Debug & Logger
+*.db
+*.db-journal
 *.log
 *.sqlite3
 *.sqlite3-journal
@@ -17,11 +19,15 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+celerybeat-schedule
 
 
 # dependencies
 node_modules/
+versions/
 package-lock.json
+data.json
+data_reserve.json
 .pnp/
 .pnp.js
 
@@ -30,6 +36,11 @@ coverage/
 
 # production
 build/
+
+# docker data volumes
+postgres-data/
+logs-data/
+certbot/
 
 # misc
 .DS_Store

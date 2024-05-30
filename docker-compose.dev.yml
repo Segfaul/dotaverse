@@ -1,0 +1,63 @@
+version: '3.9'
+name: dotaverse_app_dev
+services:
+  postgres:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - dotaverse-dev
+
+  backend:
+    build:
+      context: ./
+      dockerfile: ./backend/Dockerfile
+    command:  bash -c 'while !</dev/tcp/postgres/5432; do sleep 1; done; 
+      alembic -c backend/alembic.ini revision --autogenerate -m "first_commit";
+      alembic -c backend/alembic.ini upgrade head;
+      uvicorn backend.api.main:app --reload --log-config backend/config/log.ini --host 0.0.0.0 --port 8000'
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/dotaverse/backend
+      - ./logs-data:/dotaverse/logs
+    environment:
+      - POSTGRES_HOST=postgres
+      - REDIS_URL=redis://redis:6379/
+      - LOG_FILE_PATH=logs/dotaverse.log
+    depends_on:
+      - "redis"
+      - "postgres"
+    networks:
+      - dotaverse-dev
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+    networks:
+      - dotaverse-dev
+
+  frontend:
+    build:
+      context: ./
+      dockerfile: ./frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    command:  bash -c 'npm run dev -- --host'
+    volumes:
+      - ./frontend:/frontend
+    networks:
+      - dotaverse-dev
+
+networks:
+  dotaverse-dev:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  logs-data:
