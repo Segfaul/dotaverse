@@ -15,7 +15,6 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
 
 // Initialize Google Analytics with environment variable
 const trackingId = import.meta.env.VITE_APP_GA_KEY;
-console.log(trackingId);
 if (trackingId) {
   ReactGA.initialize(trackingId);
   ReactGA.send({ hitType: "pageview", page: window.location.href, title: "init page" });

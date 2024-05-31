@@ -51,6 +51,7 @@ services:
     command:  bash -c 'npm run dev -- --host'
     volumes:
       - ./frontend:/frontend
+      - /frontend/node_modules
     networks:
       - dotaverse-dev
 
