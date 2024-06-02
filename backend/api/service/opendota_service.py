@@ -9,7 +9,7 @@ from sqlalchemy import select
 
 from backend.api.util import get_or_create
 from backend.api.model import Team, TeamPlayer, Player, Hero, PlayerHeroChance
-from backend.api.service.db_service import AsyncSessionFactory
+from backend.api.service.db_service import TaskAsyncSessionFactory
 
 env = os.environ.get
 load_dotenv('./.env')
@@ -54,7 +54,7 @@ async def populate_db_from_opendota():
     with open('backend/config/data.json', 'r', encoding='utf-8') as record_file:
         data = json.load(record_file)
 
-    async with AsyncSessionFactory() as session:
+    async with TaskAsyncSessionFactory() as session:
         heroes: Dict[str, Hero] = {
             hero.opendota_name: hero async for hero in Hero.read_all(session)
         }
