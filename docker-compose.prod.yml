@@ -50,11 +50,31 @@ services:
     networks:
       - dotaverse-prod
   
-  celery:
+  celery_worker:
     build:
       context: ./
       dockerfile: ./backend/Dockerfile
-    command: celery -A backend.api.celery.worker:celery worker -B --loglevel=WARNING --concurrency=2 --loglevel=WARNING -f logs/dotaverse.log
+    command: celery -A backend.api.celery.worker:celery worker --loglevel=WARNING --concurrency=2 -f logs/dotaverse.log
+    volumes:
+      - ./backend:/dotaverse/backend
+      - ./logs-data:/dotaverse/logs
+    environment:
+      - POSTGRES_HOST=postgres
+      - CELERY_BROKER_URL=amqp://guest:guest@rabbitmq:5672/
+      - LOG_FILE_PATH=logs/dotaverse.log
+    depends_on:
+      - "redis"
+      - "rabbitmq"
+      - "postgres"
+      - "backend"
+    networks:
+      - dotaverse-prod
+
+  celery_beat:
+    build:
+      context: ./
+      dockerfile: ./backend/Dockerfile
+    command: celery -A backend.api.celery.worker:celery beat --loglevel=WARNING -f logs/dotaverse.log
     volumes:
       - ./backend:/dotaverse/backend
       - ./logs-data:/dotaverse/logs
