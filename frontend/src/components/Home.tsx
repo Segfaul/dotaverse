@@ -1,10 +1,13 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import Navbar from './util/Navbar';
-import { TeamSelection } from './TeamSelector';
 import { FiArrowDownCircle, FiDatabase, FiCode, FiClock, FiPlay, FiBookOpen } from 'react-icons/fi';
 import { FaGithub, FaTelegram } from "react-icons/fa6";
+
+import Navbar from './util/Navbar';
+import { TeamSelection } from './TeamSelector';
+import Avatar from '../assets/avatar.webp'
+import LandingPA from '../assets/landing-pa-1.webp'
 
 
 interface FeatureItem {
@@ -73,7 +76,7 @@ const Home: React.FC = () => {
     {
       name: 'Segfaul',
       description: 'Founder, Backend and Frontend developer',
-      avatar: 'https://i.postimg.cc/5ydCNSwW/avatar.jpg',
+      avatar: Avatar,
       credentials: [
         {
           service_link: 'https://github.com/segfaul',
@@ -107,7 +110,7 @@ const Home: React.FC = () => {
           </div>
         </div>
         <div className="landing-img">
-          <img src='https://i.postimg.cc/G3P2t6n5/landing-pa-1.png' />
+          <img src={LandingPA} />
         </div>
         <ArrowLink sectionId='features'/>
       </section>
