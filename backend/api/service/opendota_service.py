@@ -66,7 +66,8 @@ async def populate_db_from_opendota():
 
             for player in row["players"]:
                 player_instance = await get_or_create(
-                    session, Player, name=player["name"], steamid=int(player["steamid"]),
+                    session, Player, defaults={"name": player["name"]},
+                    steamid=int(player["steamid"]),
                     opendota_link=f'https://www.opendota.com/players/{player["account_id"]}'
                 )
                 team_player_instance = await get_or_create(

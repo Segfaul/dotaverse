@@ -1141,14 +1141,12 @@ section {
 
 .team-background-overlay {
     background-position: center 28%;
-    background-image: url('https://cdn.cloudflare.steamstatic.com/apps/dota2/images//aegis/bg_01.jpg');
 }
 
 
 /* Player Component */
 .player-background-overlay {
     filter: blur(4.5px);
-    background-image: url('https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/international2023/blue_gradient_soft_aegis.jpg');
 }
 
 .player-stats-heroes-table td:nth-child(3), .player-stats-heroes-table th:nth-child(3) {
@@ -1171,7 +1169,6 @@ section {
 /* Match Component */
 .match-background-overlay {
     filter: blur(4.5px);
-    background-image: url('https://cdn.cloudflare.steamstatic.com/apps/dota2/images/dota_react/international2023/cathedral_floor.jpg');
 }
 
 .match-stats-player-table {

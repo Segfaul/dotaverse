@@ -9,6 +9,7 @@ import Table, { Column } from '../util/Table';
 import SearchBar from '../util/SearchBar';
 import NavTab, { NavTab as NavTabSchema } from '../util/NavTab';
 import { capitalize, truncateText } from '../util/TextTransform';
+import PlayerBG from '../../assets/bg_players.webp';
 
 
 const Player: React.FC = () => {
@@ -192,7 +193,10 @@ const Player: React.FC = () => {
     <div className='hero'>
       <section className="hero-stats">
         <div className='hero-stats-intro'>
-        <div className="hero-background-overlay player-background-overlay"/>
+        <div
+          className="hero-background-overlay player-background-overlay"
+          style={{ backgroundImage: `url(${PlayerBG})` }}
+        />
           <h1>{player?.name}</h1>
         </div>
         <NavTab defaultTab={tabs[1].value} tabs={tabs} />

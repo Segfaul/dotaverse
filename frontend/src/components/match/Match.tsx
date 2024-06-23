@@ -7,6 +7,7 @@ import { Match as MatchSchema, MatchPlayer } from '../config/types';
 import PageLoading from '../error/PageLoading';
 import Table, { Column } from '../util/Table';
 import { truncateText } from '../util/TextTransform';
+import MatchBG from '../../assets/bg_matches.webp';
 
 
 const Match: React.FC = () => {
@@ -100,7 +101,10 @@ const Match: React.FC = () => {
     <div className='hero'>
       <section className="hero-stats">
         <div className='hero-stats-intro'>
-        <div className="hero-background-overlay match-background-overlay"/>
+        <div
+          className="hero-background-overlay match-background-overlay"
+          style={{ backgroundImage: `url(${MatchBG})` }}
+        />
           <h1>{t('match.h1')} #{match?.id}</h1>
         </div>
         <div className="hero-stats-players">
