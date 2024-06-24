@@ -114,16 +114,16 @@
             "date": "Date de création"
         },
         "team": {
-            "id": "Identifiant de l'équipe",
+            "id": "ID de l'équipe",
             "name": "Nom de l'équipe",
             "date": "Date de modification"
         },
         "hero": {
-            "id": "Identifiant du héros",
+            "id": "ID du héros",
             "name": "Nom du héros"
         },
         "player": {
-            "id": "Identifiant du joueur",
+            "id": "ID du joueur",
             "name": "Nom du joueur",
             "date": "Date de création"
         },
@@ -132,7 +132,7 @@
             "date": "Date de modification"
         },
         "match": {
-            "id": "Identifiant du match",
+            "id": "ID du match",
             "name": "Résultats du match",
             "date": "Date du match"
         }
