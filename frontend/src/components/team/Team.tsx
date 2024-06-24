@@ -73,7 +73,7 @@ const Team: React.FC = () => {
   const playerColumns: Column<TeamPlayer>[] = [
     { header: t('columns.player.id'), accessor: 'player_id'},
     { header: t('columns.player.name'), accessor: 'player_id', render: row => (
-      <Link className='heroes-list-item-link' to={`/players/${row.id}`}>
+      <Link className='heroes-list-item-link' to={`/players/${row.player_id}`}>
         <div className='heroes-list-item-data hero-player-list-item-data'>
           <span className="heroes-list-item-name">{row.player?.name}</span>
         </div>
